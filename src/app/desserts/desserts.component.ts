@@ -1,25 +1,42 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { DessertService } from '../data/dessert-service';
+import { Component, OnInit, inject } from '@angular/core';
+import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
-import { RatingComponent } from '../rating/rating.component';
+import { DessertCardComponent } from '../dessert-card/dessert-card.component';
+import { JsonPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RatingService } from '../data/rating.service';
 
 @Component({
   selector: 'app-desserts',
   standalone: true,
-  imports: [RatingComponent],
+  imports: [DessertCardComponent, FormsModule, JsonPipe],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css'
 })
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
-  
-  desserts = signal<Dessert[]>([]);
+  #ratingService = inject(RatingService);
+
+  desserts: Dessert[] = [];
+
+  originalName = '';
+  englishName = '';
 
   async ngOnInit() {
-    const desserts = await this.#dessertService.findPromise('', '')
-    this.desserts.set(desserts);
+    this.search();
   }
 
+  async search() {
+    this.desserts = await this.#dessertService.findPromise(this.originalName, this.englishName)
+  }
 
+  async loadRatings() {
+    const ratings = await this.#ratingService.loadExpertRatings();
+    for(const d of this.desserts) {
+      if (ratings[d.id]) {
+        d.rating = ratings[d.id];
+      }
+    }
+  }
 
 }

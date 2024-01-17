@@ -1,7 +1,8 @@
 export type Dessert = {
     id: number;
-    name: string;
+    originalName: string;
     englishName: string;
     description: string;
     kcal: number;
+    rating: number;
 }

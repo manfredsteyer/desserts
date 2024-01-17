@@ -1,84 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-A {
-    cursor: pointer;
-}
-
-/*
-    The following animations are used together with the View Transitions API
-    are taken from the examples found here:
-    https://developer.chrome.com/docs/web-platform/view-transitions
-*/
-
-@keyframes fade-in {
-    from { opacity: 0; }
-  }
-  
-  @keyframes fade-out {
-    to { opacity: 0; }
-  }
-  
-  @keyframes slide-from-right {
-    from { transform: translateX(30px); }
-  }
-  
-  @keyframes slide-to-left {
-    to { transform: translateX(-30px); }
-  }
-  
-  ::view-transition-old(root) {
-    animation: 90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-      300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
-  }
-  
-  ::view-transition-new(root) {
-    animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-      300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
-  }
-
-
-@layer utilities {
-
-
-    b {
-        @apply text-sky-800 font-bold
-    }
-
-    p {
-        @apply mt-5 mb-5
-    }
-
-    h1 {
-        @apply text-2xl font-bold
-    }
-
-    .title {
-        @apply bg-sky-900 p-2 pl-10 text-white text-lg font-bold title-vt;
-
-    }
-
-    .title-vt {
-        view-transition-name: title;
-    }
-
-    .h-menu-vt {
-        view-transition-name: h-menu;
-    }
-
-    .product-name-vt {
-        view-transition-name: product-name
-    }
-
+@layer components {
     .h-menu {
         @apply bg-gray-800 p-2 pl-10 text-white h-menu-vt
-
     }
 
     .card-grid {
-        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-10
+        @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10
     }
 
     .content {
@@ -86,7 +16,7 @@ A {
     }
 
     .card {
-        @apply bg-gray-100 rounded-lg overflow-hidden shadow-md
+        @apply bg-gray-100 h-full rounded-lg overflow-hidden shadow-md flex flex-col
     }
 
     .card-title {
@@ -105,17 +35,61 @@ A {
         @apply p-4
     }
 
-    .card-header {
-    }
-
-    .card-title {
-    }
-
     .card-footer {
-        @apply flex justify-between p-4
+        @apply p-4 mt-auto
+    }
+
+    .btn {
+        @apply px-4 py-2 bg-gray-500 hover:bg-gray-400 text-white rounded
     }
 
     .btn-primary {
-        @apply px-4 py-2 bg-sky-900 text-white rounded hover:bg-sky-600
+        @apply bg-sky-900 hover:bg-sky-600
+    }
+}
+
+@layer base {
+    A {
+        @apply cursor-pointer
+    }
+
+    b {
+        @apply text-sky-800 font-bold
+    }
+
+    p {
+        @apply mt-5 mb-5
+    }
+
+    h1 {
+        @apply text-2xl font-bold
+    }
+
+    .title {
+        @apply bg-sky-900 p-2 pl-10 text-white text-lg font-bold title-vt;
+    }
+
+    label {
+        @apply font-bold;
+        display: block;
+    }
+
+    input {
+        @apply w-full max-w-96 size-10 focus:outline-none;
+        border-bottom: solid black 1px;
+    }
+}
+
+@layer utilities {
+    .title-vt {
+        view-transition-name: title;
+    }
+
+    .h-menu-vt {
+        view-transition-name: h-menu;
+    }
+
+    .product-name-vt {
+        view-transition-name: product-name
     }
 }

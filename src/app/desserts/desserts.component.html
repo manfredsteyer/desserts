@@ -1,25 +1,26 @@
-<div class="card-grid">
-
-    @for(dessert of desserts(); track dessert.id) {
-
-        <div class="card">
-            <h2 class="card-title">{{dessert.name}}</h2>
-            <i class="card-subtitle">{{dessert.englishName}}</i>
-
-            <img class="w-full mt-5" src="/assets/{{dessert.id}}.png" alt="Bildbeschreibung">
-
-            <div class="card-body">
-                <p class="card-text">{{dessert.description}}</p>
-                <app-rating [rating]="3"></app-rating>
-            </div>
-            <div class="card-footer">
-                <button class="btn-primary">Details</button>
-            </div>
+<form>
+    <div class="card-grid">
+        <div>
+            <label for="name">Original Name</label>
+            <input [(ngModel)]="originalName" name="name" type="text">
         </div>
 
+        <div>
+            <label for="englishName">English Name</label>
+            <input [(ngModel)]="englishName" name="englishName">
+        </div>
+    </div>
+    <div class="mt-10 mb-10">
+        <button  type="submit" (click)="search()" class="btn btn-primary">Search</button>
+        <button  type="button" (click)="loadRatings()" class="btn ml-2">Expert Ratings</button>
+    </div>
+</form>
+
+<div class="card-grid">
+    @for(dessert of desserts; track dessert.id) {
+    <app-dessert-card [dessert]="dessert"></app-dessert-card>
     }
     @empty {
-        <p class="text-lg">Sorry, no desserts found. Perhaps some cheese?</p>
+    <p class="text-lg">Sorry, no desserts found.</p>
     }
-
 </div>

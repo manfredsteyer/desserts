@@ -10,16 +10,16 @@ export class DessertService {
 
     #http = inject(HttpClient);
 
-    find(name: string, englishName: string): Observable<Dessert[]> {
+    find(originalName = '', englishName = ''): Observable<Dessert[]> {
         return this.#http.get<Dessert[]>(dataFile).pipe(
             map(result => result.filter(
-                d => d.name.includes(name)
-                    && d.englishName.includes(englishName)))
+                d => d.originalName.toLowerCase().includes(originalName.toLowerCase())
+                    && d.englishName.toLowerCase().includes(englishName.toLowerCase())))
         );
     }
 
-    findPromise(name: string, englishName: string): Promise<Dessert[]> {
-        return lastValueFrom(this.find(name, englishName));
+    findPromise(originalName: string, englishName: string): Promise<Dessert[]> {
+        return lastValueFrom(this.find(originalName, englishName));
     }
 
     findById(id: number): Observable<Dessert[]> {
