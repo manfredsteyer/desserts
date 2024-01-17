@@ -1,0 +1,25 @@
+<div class="card-grid">
+
+    @for(dessert of desserts(); track dessert.id) {
+
+        <div class="card">
+            <h2 class="card-title">{{dessert.name}}</h2>
+            <i class="card-subtitle">{{dessert.englishName}}</i>
+
+            <img class="w-full mt-5" src="/assets/{{dessert.id}}.png" alt="Bildbeschreibung">
+
+            <div class="card-body">
+                <p class="card-text">{{dessert.description}}</p>
+                <app-rating [rating]="3"></app-rating>
+            </div>
+            <div class="card-footer">
+                <button class="btn-primary">Details</button>
+            </div>
+        </div>
+
+    }
+    @empty {
+        <p class="text-lg">Sorry, no desserts found. Perhaps some cheese?</p>
+    }
+
+</div>

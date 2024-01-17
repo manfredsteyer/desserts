@@ -1,0 +1,79 @@
+[
+    {
+        "id": 1,
+        "name": "Sachertorte",
+        "englishName": "Sacher Cake",
+        "description": "A dense chocolate cake with a layer of apricot jam and chocolate icing.",
+        "kcal": 360
+    },
+    {
+        "id": 2,
+        "name": "Apfelstrudel",
+        "englishName": "Apple Strudel",
+        "description": "A thin dough filled with apples, cinnamon, sugar, and often raisins.",
+        "kcal": 250
+    },
+    {
+        "id": 3,
+        "name": "Kaiserschmarrn",
+        "englishName": "Emperor's Mess",
+        "description": "A fluffy, shredded pancake, served with powdered sugar and apple sauce or plum compote.",
+        "kcal": 300
+    },
+    {
+        "id": 4,
+        "name": "Topfenstrudel",
+        "englishName": "Cheese Strudel",
+        "description": "A strudel filled with a sweet curd cheese (quark) mixture, often with raisins.",
+        "kcal": 270
+    },
+    {
+        "id": 5,
+        "name": "Marillenknödel",
+        "englishName": "Apricot Dumplings",
+        "description": "Small dumplings filled with apricots, encased in a dough made from curd cheese, semolina, or potatoes.",
+        "kcal": 200
+    },
+    {
+        "id": 6,
+        "name": "Linzer Torte",
+        "englishName": "Linzer Tart",
+        "description": "A crumbly tart with a layer of red fruit jelly, typically currant, and a lattice of dough on top.",
+        "kcal": 320
+    },
+    {
+        "id": 7,
+        "name": "Mohnnudeln",
+        "englishName": "Poppy Seed Noodles",
+        "description": "Potato noodles generously sprinkled with ground poppy seeds and sugar.",
+        "kcal": 350
+    },
+    {
+        "id": 8,
+        "name": "Salzburger Nockerln",
+        "englishName": "Salzburg Soufflé",
+        "description": "A sweet soufflé often dusted with powdered sugar and served with a fruit sauce.",
+        "kcal": 270
+    },
+    {
+        "id": 9,
+        "name": "Palatschinken",
+        "englishName": "Austrian Pancakes",
+        "description": "Thin pancakes, similar to French crêpes, filled with various sweet fillings like jam, curd cheese, or chocolate.",
+        "kcal": 220
+    },
+    {
+        "id": 10,
+        "name": "Eispalatschinken",
+        "englishName": "Ice Cream Pancakes",
+        "beschreibung": "Thin pancakes filled with ice cream and often topped with fruit sauce or chocolate syrup.",
+        "kalorien": 280 
+    },    
+    {
+        "id": 11,
+        "name": "Buchteln",
+        "englishName": "Jam-Filled Buns",
+        "description": "Baked yeast dough buns, filled with jam, often served in a vanilla sauce.",
+        "kcal": 260
+    }
+]
