@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -23,6 +23,11 @@ export class DessertsComponent implements OnInit {
   englishName = signal('');
 
   desserts = signal<Dessert[]>([]);
+
+  maxRating = computed(() => this.desserts().reduce(
+    (acc, d) => Math.max(acc, d.rating),
+    0
+  ));
 
   async ngOnInit() {
     this.search();
