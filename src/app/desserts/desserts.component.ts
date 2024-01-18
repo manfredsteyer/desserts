@@ -17,10 +17,10 @@ export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
 
-  desserts: Dessert[] = [];
-
   originalName = '';
   englishName = '';
+
+  desserts: Dessert[] = [];
 
   async ngOnInit() {
     this.search();
