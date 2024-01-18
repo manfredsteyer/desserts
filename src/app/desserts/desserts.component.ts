@@ -32,7 +32,9 @@ export class DessertsComponent implements OnInit {
       originalName: this.originalName,
       englishName: this.englishName
     };
-    this.desserts = await this.#dessertService.findPromise(filter);
+    const desserts = await this.#dessertService.findPromise(filter);
+  
+    this.desserts = desserts;
   }
 
   async loadRatings() {
