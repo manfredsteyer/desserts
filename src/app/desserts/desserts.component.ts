@@ -31,21 +31,12 @@ export class DessertsComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      console.log('originalName', this.originalName());
-      console.log('englishName', this.englishName());
+      this.search();
     });
-
-    this.originalName.set('Sacher');
-    this.englishName.set('Cake');
-
-    setTimeout(() => {
-      this.originalName.set('Kaiser');
-      this.englishName.set('Mess');
-    }, 3000);
   }
 
   async ngOnInit() {
-    this.search();
+    console.log('init');
   }
 
   async search() {
