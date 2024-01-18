@@ -5,6 +5,7 @@ import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RatingService } from '../data/rating.service';
+import { DessertFilter } from '../data/dessert-filter';
 
 @Component({
   selector: 'app-desserts',
@@ -27,16 +28,19 @@ export class DessertsComponent implements OnInit {
   }
 
   async search() {
-    this.desserts = await this.#dessertService.findPromise(this.originalName, this.englishName)
+    const filter: DessertFilter = {
+      originalName: this.originalName,
+      englishName: this.englishName
+    };
+    this.desserts = await this.#dessertService.findPromise(filter);
   }
 
   async loadRatings() {
     const ratings = await this.#ratingService.loadExpertRatings();
-    for(const d of this.desserts) {
+    for (const d of this.desserts) {
       if (ratings[d.id]) {
         d.rating = ratings[d.id];
       }
     }
   }
-
 }

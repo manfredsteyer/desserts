@@ -115,7 +115,7 @@
       },
       {
         "file": "src/app/data/dessert.ts",
-        "hash": "2889736757385824998"
+        "hash": "4091695237581156333"
       },
       {
         "file": "src/app/data/rating.service.ts",
@@ -127,7 +127,7 @@
       },
       {
         "file": "src/app/dessert-card/dessert-card.component.html",
-        "hash": "4663315143001983029"
+        "hash": "2298305381904223535"
       },
       {
         "file": "src/app/dessert-card/dessert-card.component.spec.ts",
@@ -151,7 +151,7 @@
       },
       {
         "file": "src/app/desserts/desserts.component.ts",
-        "hash": "9837968808182223057"
+        "hash": "10401104649954155163"
       },
       {
         "file": "src/app/rating/rating.component.css",
@@ -159,7 +159,7 @@
       },
       {
         "file": "src/app/rating/rating.component.html",
-        "hash": "5014711343591765525"
+        "hash": "5505618283532294290"
       },
       {
         "file": "src/app/rating/rating.component.spec.ts",
@@ -167,47 +167,55 @@
       },
       {
         "file": "src/app/rating/rating.component.ts",
-        "hash": "14314187774428454318"
+        "hash": "4974092972626135286"
       },
       {
         "file": "src/assets/.gitkeep",
         "hash": "3244421341483603138"
       },
       {
-        "file": "src/assets/1.png",
-        "hash": "8624958778600796084"
+        "file": "src/assets/apfelstrudel.jpg",
+        "hash": "18164108666781920886"
       },
       {
-        "file": "src/assets/2.png",
-        "hash": "7536144448976618970"
-      },
-      {
-        "file": "src/assets/3.png",
-        "hash": "991383251037678478"
-      },
-      {
-        "file": "src/assets/4.png",
-        "hash": "11725434970382373078"
-      },
-      {
-        "file": "src/assets/5.png",
-        "hash": "18360296369518656836"
-      },
-      {
-        "file": "src/assets/6.png",
-        "hash": "16475722915750323642"
-      },
-      {
-        "file": "src/assets/7.png",
-        "hash": "17061189260003627391"
-      },
-      {
-        "file": "src/assets/8.png",
-        "hash": "2244192267753770130"
+        "file": "src/assets/buchteln.jpg",
+        "hash": "1125152994635699175"
       },
       {
         "file": "src/assets/desserts.json",
-        "hash": "1003698255957997791"
+        "hash": "15398787018205176271"
+      },
+      {
+        "file": "src/assets/eispalatschinken.jpg",
+        "hash": "2692308488302730289"
+      },
+      {
+        "file": "src/assets/kaiserschmarn.jpg",
+        "hash": "8226311119845564290"
+      },
+      {
+        "file": "src/assets/linzertorte.jpg",
+        "hash": "15958649085210296077"
+      },
+      {
+        "file": "src/assets/marillenknoedel.jpg",
+        "hash": "11469371851484120247"
+      },
+      {
+        "file": "src/assets/mohnnudeln.jpg",
+        "hash": "2732216423082916450"
+      },
+      {
+        "file": "src/assets/palatschniken.jpg",
+        "hash": "17307168843725379766"
+      },
+      {
+        "file": "src/assets/sachertorte.jpg",
+        "hash": "18278130141497865266"
+      },
+      {
+        "file": "src/assets/salzburgernockerln.jpg",
+        "hash": "15825651534443632762"
       },
       {
         "file": "src/assets/star-shadow.svg",
@@ -216,6 +224,10 @@
       {
         "file": "src/assets/star.svg",
         "hash": "17882098121616585535"
+      },
+      {
+        "file": "src/assets/topfenstrudel.jpg",
+        "hash": "15551940505939134395"
       },
       {
         "file": "src/favicon.ico",

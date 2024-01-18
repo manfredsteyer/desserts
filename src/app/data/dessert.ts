@@ -6,4 +6,4 @@ export type Dessert = {
     kcal: number;
     rating: number;
     image: string;
-}
+};
