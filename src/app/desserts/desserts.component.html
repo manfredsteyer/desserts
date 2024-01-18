@@ -17,7 +17,7 @@
 
 <div class="card-grid">
     @for(dessert of desserts(); track dessert.id) {
-    <app-dessert-card [dessert]="dessert"></app-dessert-card>
+    <app-dessert-card [dessert]="dessert" (ratingChange)="updateRating(dessert.id, $event)"></app-dessert-card>
     }
     @empty {
     <p class="text-lg">Sorry, no desserts found.</p>

@@ -18,6 +18,24 @@
         "image": "apfelstrudel.jpg"
     },
     {
+        "id": 9,
+        "originalName": "Palatschinken",
+        "englishName": "Austrian Pancakes",
+        "description": "Thin pancakes, similar to French crêpes, filled with various sweet fillings like jam, curd cheese, or chocolate.",
+        "kcal": 220,
+        "rating": 3,
+        "image": "palatschniken.jpg"
+    },
+    {
+        "id": 10,
+        "originalName": "Eispalatschinken",
+        "englishName": "Ice Cream Pancakes",
+        "description": "Thin pancakes filled with ice cream and often topped with fruit sauce or chocolate syrup.",
+        "kcal": 280,
+        "rating": 3,
+        "image": "eispalatschinken.jpg"
+    },    
+    {
         "id": 3,
         "originalName": "Kaiserschmarrn",
         "englishName": "Emperor's Mess",
@@ -71,24 +89,6 @@
         "rating": 3,
         "image": "salzburgernockerln.jpg"
     },
-    {
-        "id": 9,
-        "originalName": "Palatschinken",
-        "englishName": "Austrian Pancakes",
-        "description": "Thin pancakes, similar to French crêpes, filled with various sweet fillings like jam, curd cheese, or chocolate.",
-        "kcal": 220,
-        "rating": 3,
-        "image": "palatschniken.jpg"
-    },
-    {
-        "id": 10,
-        "originalName": "Eispalatschinken",
-        "englishName": "Ice Cream Pancakes",
-        "description": "Thin pancakes filled with ice cream and often topped with fruit sauce or chocolate syrup.",
-        "kcal": 280,
-        "rating": 3,
-        "image": "eispalatschinken.jpg"
-    },    
     {
         "id": 11,
         "originalName": "Buchteln",

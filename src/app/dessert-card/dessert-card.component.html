@@ -9,6 +9,6 @@
     </div>
     <div class="card-footer">
         <div class="card-text mt-0 mb-5">{{dessert.kcal}} kcal</div>
-        <app-rating [(rating)]="dessert.rating"></app-rating>
+        <app-rating [rating]="dessert.rating" (ratingChange)="updateRating($event)"></app-rating>
     </div>
 </div>
