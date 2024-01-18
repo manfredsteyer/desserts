@@ -47,4 +47,12 @@ export class DessertsComponent implements OnInit {
         d
     ));
   }
+
+  updateRating(id: number, rating: number): void {
+    this.desserts.update(desserts => desserts.map(
+      d => (d.id === id) ?
+        { ...d, rating: rating } :
+        d
+    ));
+  }
 }
