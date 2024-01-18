@@ -37,7 +37,7 @@ export class DessertsComponent implements OnInit {
 
     effect(() => {
       this.originalName.set(this.englishName());
-    });
+    }, { allowSignalWrites: true });
   }
 
   async ngOnInit() {
