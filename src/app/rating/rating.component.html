@@ -1,8 +1,8 @@
 @for(star of stars; track $index) {
     @if(star) {
-        <img src="/assets/star.svg" class="star" (mousedown)="rate($index + 1)" (dblclick)="enterCheatMode()">
+        <img src="/assets/star.svg" class="star" (mousedown)="rate($index + 1)" (dblclick)="enterCheatMode()" [alt]="$index">
     }
     @else {
-        <img src="/assets/star-shadow.svg" class="star" (mousedown)="rate($index + 1)" (dblclick)="enterCheatMode()">
+        <img src="/assets/star-shadow.svg" class="star" (mousedown)="rate($index + 1)" (dblclick)="enterCheatMode()" [alt]="$index">
     }
 }
