@@ -45,4 +45,8 @@ export class DessertsComponent implements OnInit {
       }
     }
   }
+
+  updateRating(id: number, rating: number): void {
+    console.log('rating changed', id, rating);
+  }
 }
