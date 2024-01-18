@@ -35,9 +35,13 @@ export class DessertsComponent implements OnInit {
       console.log('englishName', this.englishName());
     });
 
-    effect(() => {
-      this.originalName.set(this.englishName());
-    }, { allowSignalWrites: true });
+    this.originalName.set('Sacher');
+    this.englishName.set('Cake');
+
+    setTimeout(() => {
+      this.originalName.set('Kaiser');
+      this.englishName.set('Mess');
+    }, 3000);
   }
 
   async ngOnInit() {
