@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -12,7 +12,8 @@ import { DessertFilter } from '../data/dessert-filter';
   standalone: true,
   imports: [DessertCardComponent, FormsModule, JsonPipe],
   templateUrl: './desserts.component.html',
-  styleUrl: './desserts.component.css'
+  styleUrl: './desserts.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
