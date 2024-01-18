@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 
@@ -10,6 +10,5 @@ import { RatingComponent } from '../rating/rating.component';
   styleUrl: './dessert-card.component.css'
 })
 export class DessertCardComponent {
-  @Input({ required: true }) 
-  dessert!: Dessert;
+  dessert = input.required<Dessert>();
 }
