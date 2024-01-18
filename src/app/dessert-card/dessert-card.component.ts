@@ -18,12 +18,6 @@ export class DessertCardComponent {
   @Output()
   ratingChange = new EventEmitter<number>();
 
-  constructor() {
-    effect(() => {
-      console.log('dessert', this.dessert().englishName, this.dessert().rating);
-    });
-  }
-
   updateRating(newRating: number): void {
     this.ratingChange.emit(newRating);
   }

@@ -34,6 +34,10 @@ export class DessertsComponent implements OnInit {
       console.log('originalName', this.originalName());
       console.log('englishName', this.englishName());
     });
+
+    effect(() => {
+      this.originalName.set(this.englishName());
+    });
   }
 
   async ngOnInit() {
