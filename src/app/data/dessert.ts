@@ -5,4 +5,5 @@ export type Dessert = {
     description: string;
     kcal: number;
     rating: number;
+    image: string;
 }
