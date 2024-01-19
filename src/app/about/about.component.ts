@@ -1,5 +1,5 @@
 import { Component, effect } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ export class AboutComponent {
   counter = toSignal(this.counter$);
 
   constructor() {
-    this.counter$.subscribe(c => {
+    this.counter$.pipe(takeUntilDestroyed()).subscribe(c => {
       console.log('counter$', c);
     });
 
