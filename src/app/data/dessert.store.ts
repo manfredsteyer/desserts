@@ -21,7 +21,9 @@ export class DessertStore {
         desserts: [] as Dessert[],
     });
 
-    readonly filter = computed(() => this.#state().filter);
+    readonly originalName = computed(() => this.#state().filter.originalName);
+    readonly englishName = computed(() => this.#state().filter.englishName);
+
     readonly desserts = computed(() => this.#state().desserts);
 
     readonly maxRating = computed(() => this.desserts().reduce(
