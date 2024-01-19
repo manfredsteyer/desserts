@@ -1981,6 +1981,15 @@
         "hash": "sha512-ccfcIDlogiXNq5KcbAwbaO7lMh3Tm1i3khMPYpxlK8hH/W53zN81KM9coerRLOnTGu3nfXIniAmQbRI9OxbC0w=="
       }
     },
+    "npm:@ngrx/signals": {
+      "type": "npm",
+      "name": "npm:@ngrx/signals",
+      "data": {
+        "version": "17.1.0",
+        "packageName": "@ngrx/signals",
+        "hash": "sha512-CF387SNYUoPeFCh13S/vmsyFRZHXm7cZjxuwXbI3AWDS/JXO9GC2061O9f0Fy7DIyQtDisY9uGV5eOiKTYmT0w=="
+      }
+    },
     "npm:@ngtools/webpack": {
       "type": "npm",
       "name": "npm:@ngtools/webpack",
@@ -12339,6 +12348,23 @@
       {
         "source": "npm:@ljharb/through",
         "target": "npm:call-bind",
+        "type": "static"
+      }
+    ],
+    "npm:@ngrx/signals": [
+      {
+        "source": "npm:@ngrx/signals",
+        "target": "npm:@angular/core",
+        "type": "static"
+      },
+      {
+        "source": "npm:@ngrx/signals",
+        "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "npm:@ngrx/signals",
+        "target": "npm:tslib",
         "type": "static"
       }
     ],

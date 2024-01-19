@@ -10,6 +10,7 @@
     "@angular/platform-browser": "^17.1.0",
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
+    "@ngrx/signals": "^17.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3",
@@ -79,11 +80,27 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "3528877698256382119"
+        "hash": "16463271093103682482"
       },
       {
         "file": "package.json",
-        "hash": "8516162770945100629"
+        "hash": "14674444438189503841"
+      },
+      {
+        "file": "src/app/about/about.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/about/about.component.html",
+        "hash": "10913588825654952802"
+      },
+      {
+        "file": "src/app/about/about.component.spec.ts",
+        "hash": "5623631242477827208"
+      },
+      {
+        "file": "src/app/about/about.component.ts",
+        "hash": "17887056408794874463"
       },
       {
         "file": "src/app/app.component.css",
@@ -91,7 +108,7 @@
       },
       {
         "file": "src/app/app.component.html",
-        "hash": "3718718750291576890"
+        "hash": "8038986951560654818"
       },
       {
         "file": "src/app/app.component.spec.ts",
@@ -99,7 +116,7 @@
       },
       {
         "file": "src/app/app.component.ts",
-        "hash": "17486440786859624336"
+        "hash": "10094922294675448700"
       },
       {
         "file": "src/app/app.config.ts",
@@ -107,7 +124,7 @@
       },
       {
         "file": "src/app/app.routes.ts",
-        "hash": "809736233805555256"
+        "hash": "10794352757520680755"
       },
       {
         "file": "src/app/data/dessert-filter.ts",
@@ -116,6 +133,10 @@
       {
         "file": "src/app/data/dessert.service.ts",
         "hash": "16967426148666389230"
+      },
+      {
+        "file": "src/app/data/dessert.store.ts",
+        "hash": "1723364782590241674"
       },
       {
         "file": "src/app/data/dessert.ts",
@@ -147,7 +168,7 @@
       },
       {
         "file": "src/app/desserts/desserts.component.html",
-        "hash": "6402768368995618809"
+        "hash": "18305800807641021099"
       },
       {
         "file": "src/app/desserts/desserts.component.spec.ts",
@@ -155,7 +176,7 @@
       },
       {
         "file": "src/app/desserts/desserts.component.ts",
-        "hash": "9593007905205767473"
+        "hash": "208741990592202361"
       },
       {
         "file": "src/app/rating/rating.component.css",
@@ -255,7 +276,7 @@
       },
       {
         "file": "src/styles.css",
-        "hash": "14512715337229766353"
+        "hash": "6232929572302165705"
       },
       {
         "file": "tailwind.config.js",
