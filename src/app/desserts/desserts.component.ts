@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -6,8 +6,7 @@ import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RatingService } from '../data/rating.service';
 import { DessertFilter } from '../data/dessert-filter';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop'
-import { combineLatest, debounceTime, filter } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-desserts',
@@ -17,7 +16,7 @@ import { combineLatest, debounceTime, filter } from 'rxjs';
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DessertsComponent implements OnInit {
+export class DessertsComponent {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
 
@@ -26,51 +25,19 @@ export class DessertsComponent implements OnInit {
 
   desserts = signal<Dessert[]>([]);
 
-  originalName$ = toObservable(this.originalName);
-  englishName$ = toObservable(this.englishName);
-
-  criteria$ = combineLatest({
-    originalName: this.originalName$,
-    englishName: this.englishName$
-  })
-    .pipe(
-      filter(c =>
-        c.originalName.length >= 3
-        || c.englishName.length >= 3),
-      debounceTime(300)
-    );
-
-  criteria = toSignal(this.criteria$, {
-    initialValue: {
-      originalName: '',
-      englishName: ''
-    }
-  });
-
   maxRating = computed(() => this.desserts().reduce(
     (acc, d) => Math.max(acc, d.rating),
     0
   ));
 
   constructor() {
-    // NOTE: We will get rid of this effect 
-    // later when switching to state management 
-    // and separating reading and writing
-    effect(() => {
-      this.search();
-    });
-  }
-
-  async ngOnInit() {
-    console.log('init');
+    this.search();
   }
 
   async search() {
-    const { originalName, englishName } = this.criteria();
-
     const filter: DessertFilter = {
-      originalName,
-      englishName
+      originalName: this.originalName(),
+      englishName: this.englishName()
     };
 
     const desserts = await this.#dessertService.findPromise(filter);
