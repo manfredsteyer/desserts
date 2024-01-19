@@ -17,8 +17,8 @@ import { FormUpdateDirective } from '../shared/form-update.directive';
 export class DessertsComponent {
   #store = inject(DessertStore);
 
-  originalName = this.#store.originalName;
-  englishName = this.#store.englishName;
+  originalName = this.#store.filter.originalName;
+  englishName = this.#store.filter.englishName;
 
   desserts = this.#store.desserts;
 
