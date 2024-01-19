@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-about',
@@ -8,4 +10,18 @@ import { Component } from '@angular/core';
   styleUrl: './about.component.css'
 })
 export class AboutComponent {
+
+  counter$ = interval(1000);
+  counter = toSignal(this.counter$);
+
+  constructor() {
+    this.counter$.subscribe(c => {
+      console.log('counter$', c);
+    });
+
+    effect(() => {
+      console.log('counter', this.counter());
+    });
+  }
+
 }
