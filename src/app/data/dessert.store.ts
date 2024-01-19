@@ -4,6 +4,8 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { RatingService } from './rating.service';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 
 export const DessertStore = signalStore(
     { providedIn: 'root' },
@@ -28,15 +30,13 @@ export const DessertStore = signalStore(
         updateFilter(filter: DessertFilter): void {
             patchState(store, { filter });
         },
-    
         async loadDesserts(): Promise<void> {
             const desserts = await dessertService.findPromise(store.filter());
             patchState(store, { desserts });
         },
-    
         async loadRatings(): Promise<void> {
             const ratings = await ratingService.loadExpertRatings();
-    
+
             patchState(store, state => ({
                 desserts: state.desserts.map(
                     d => ratings[d.id] ?
@@ -45,7 +45,6 @@ export const DessertStore = signalStore(
                 )
             }));
         },
-    
         updateRating(id: number, rating: number): void {
             patchState(store, state => ({
                 ...state,
@@ -55,6 +54,12 @@ export const DessertStore = signalStore(
                         d
                 )
             }));
-        }
-    }))
+        },
+        connectFilter: rxMethod<DessertFilter>(pipe(
+            filter(f => f.originalName.length >= 3 && f.englishName.length >= 3),
+            debounceTime(300),
+            switchMap(f => dessertService.find(f)),
+            tap(desserts => patchState(store, { desserts }))
+        ))
+    })),
 );
