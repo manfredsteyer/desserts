@@ -69,6 +69,15 @@
         @apply bg-sky-900 p-2 pl-10 text-white text-lg font-bold title-vt;
     }
 
+    menu {
+        @apply ml-10 font-normal;
+        display: inline;
+    }
+
+    menu a {
+        @apply mr-5
+    }
+
     label {
         @apply font-bold;
         display: block;
