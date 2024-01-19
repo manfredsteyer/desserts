@@ -1,0 +1,278 @@
+{
+  "version": "6.0",
+  "nxVersion": "17.2.8",
+  "deps": {
+    "@angular/animations": "^17.1.0",
+    "@angular/common": "^17.1.0",
+    "@angular/compiler": "^17.1.0",
+    "@angular/core": "^17.1.0",
+    "@angular/forms": "^17.1.0",
+    "@angular/platform-browser": "^17.1.0",
+    "@angular/platform-browser-dynamic": "^17.1.0",
+    "@angular/router": "^17.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.3",
+    "@angular-devkit/build-angular": "^17.1.0",
+    "@angular-eslint/builder": "17.2.0",
+    "@angular-eslint/eslint-plugin": "17.2.0",
+    "@angular-eslint/eslint-plugin-template": "17.2.0",
+    "@angular-eslint/schematics": "17.2.0",
+    "@angular-eslint/template-parser": "17.2.0",
+    "@angular/cli": "^17.1.0",
+    "@angular/compiler-cli": "^17.1.0",
+    "@types/jasmine": "~5.1.0",
+    "@typescript-eslint/eslint-plugin": "6.18.0",
+    "@typescript-eslint/parser": "6.18.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "~5.3.2"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {},
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "17241496168097493888"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "14645878845883387518"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "4689145951703824387"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "11934160580685414355"
+      },
+      {
+        "file": ".vscode/launch.json",
+        "hash": "17406702432687230417"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "1454727097211863380"
+      },
+      {
+        "file": ".vscode/tasks.json",
+        "hash": "10093397977228577162"
+      },
+      {
+        "file": "README.md",
+        "hash": "4270845815055634911"
+      },
+      {
+        "file": "angular.json",
+        "hash": "18179173623205849854"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "3528877698256382119"
+      },
+      {
+        "file": "package.json",
+        "hash": "8516162770945100629"
+      },
+      {
+        "file": "src/app/app.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/app.component.html",
+        "hash": "3718718750291576890"
+      },
+      {
+        "file": "src/app/app.component.spec.ts",
+        "hash": "5835632664685758555"
+      },
+      {
+        "file": "src/app/app.component.ts",
+        "hash": "17486440786859624336"
+      },
+      {
+        "file": "src/app/app.config.ts",
+        "hash": "8787251743350900595"
+      },
+      {
+        "file": "src/app/app.routes.ts",
+        "hash": "809736233805555256"
+      },
+      {
+        "file": "src/app/data/dessert-filter.ts",
+        "hash": "7530051517012718487"
+      },
+      {
+        "file": "src/app/data/dessert.service.ts",
+        "hash": "16967426148666389230"
+      },
+      {
+        "file": "src/app/data/dessert.ts",
+        "hash": "14999677590677132421"
+      },
+      {
+        "file": "src/app/data/rating.service.ts",
+        "hash": "426983134571944636"
+      },
+      {
+        "file": "src/app/dessert-card/dessert-card.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/dessert-card/dessert-card.component.html",
+        "hash": "12139870966628715376"
+      },
+      {
+        "file": "src/app/dessert-card/dessert-card.component.spec.ts",
+        "hash": "1971597060100876797"
+      },
+      {
+        "file": "src/app/dessert-card/dessert-card.component.ts",
+        "hash": "16065614380193762758"
+      },
+      {
+        "file": "src/app/desserts/desserts.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/desserts/desserts.component.html",
+        "hash": "6402768368995618809"
+      },
+      {
+        "file": "src/app/desserts/desserts.component.spec.ts",
+        "hash": "5315626394685986443"
+      },
+      {
+        "file": "src/app/desserts/desserts.component.ts",
+        "hash": "9593007905205767473"
+      },
+      {
+        "file": "src/app/rating/rating.component.css",
+        "hash": "1671189672970715185"
+      },
+      {
+        "file": "src/app/rating/rating.component.html",
+        "hash": "5505618283532294290"
+      },
+      {
+        "file": "src/app/rating/rating.component.spec.ts",
+        "hash": "6114499231776623867"
+      },
+      {
+        "file": "src/app/rating/rating.component.ts",
+        "hash": "4974092972626135286"
+      },
+      {
+        "file": "src/app/shared/form-update.directive.ts",
+        "hash": "17535320249550528641"
+      },
+      {
+        "file": "src/app/shared/inject-cd-blink.ts",
+        "hash": "9851087281237354522"
+      },
+      {
+        "file": "src/assets/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/assets/apfelstrudel.jpg",
+        "hash": "18164108666781920886"
+      },
+      {
+        "file": "src/assets/buchteln.jpg",
+        "hash": "1125152994635699175"
+      },
+      {
+        "file": "src/assets/desserts.json",
+        "hash": "5186068631095537491"
+      },
+      {
+        "file": "src/assets/eispalatschinken.jpg",
+        "hash": "2692308488302730289"
+      },
+      {
+        "file": "src/assets/kaiserschmarn.jpg",
+        "hash": "8226311119845564290"
+      },
+      {
+        "file": "src/assets/linzertorte.jpg",
+        "hash": "15958649085210296077"
+      },
+      {
+        "file": "src/assets/marillenknoedel.jpg",
+        "hash": "11469371851484120247"
+      },
+      {
+        "file": "src/assets/mohnnudeln.jpg",
+        "hash": "2732216423082916450"
+      },
+      {
+        "file": "src/assets/palatschniken.jpg",
+        "hash": "17307168843725379766"
+      },
+      {
+        "file": "src/assets/sachertorte.jpg",
+        "hash": "18278130141497865266"
+      },
+      {
+        "file": "src/assets/salzburgernockerln.jpg",
+        "hash": "15825651534443632762"
+      },
+      {
+        "file": "src/assets/star-shadow.svg",
+        "hash": "7553081771482599081"
+      },
+      {
+        "file": "src/assets/star.svg",
+        "hash": "17882098121616585535"
+      },
+      {
+        "file": "src/assets/topfenstrudel.jpg",
+        "hash": "15551940505939134395"
+      },
+      {
+        "file": "src/favicon.ico",
+        "hash": "3988961587069885523"
+      },
+      {
+        "file": "src/index.html",
+        "hash": "16628478428904646895"
+      },
+      {
+        "file": "src/main.ts",
+        "hash": "4169901790405087765"
+      },
+      {
+        "file": "src/styles.css",
+        "hash": "14512715337229766353"
+      },
+      {
+        "file": "tailwind.config.js",
+        "hash": "14645003581192718592"
+      },
+      {
+        "file": "tsconfig.app.json",
+        "hash": "13119632651406065538"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "3343339550490537441"
+      },
+      {
+        "file": "tsconfig.spec.json",
+        "hash": "5122839733245053999"
+      }
+    ]
+  }
+}
