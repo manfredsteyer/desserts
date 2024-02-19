@@ -52,17 +52,8 @@ export class DessertsComponent implements OnInit {
     0
   ));
 
-  constructor() {
-    // NOTE: We will get rid of this effect 
-    // later when switching to state management 
-    // and separating reading and writing
-    effect(() => {
-      this.search();
-    });
-  }
-
   async ngOnInit() {
-    console.log('init');
+    this.search();
   }
 
   async search() {
