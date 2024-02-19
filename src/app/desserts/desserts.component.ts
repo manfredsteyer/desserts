@@ -6,8 +6,8 @@ import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RatingService } from '../data/rating.service';
 import { DessertFilter } from '../data/dessert-filter';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop'
-import { combineLatest, debounceTime, filter } from 'rxjs';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop'
+import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-desserts',
@@ -22,7 +22,7 @@ export class DessertsComponent implements OnInit {
   #ratingService = inject(RatingService);
 
   originalName = signal('');
-  englishName = signal('');
+  englishName = signal('Cake');
 
   desserts = signal<Dessert[]>([]);
 
@@ -37,15 +37,9 @@ export class DessertsComponent implements OnInit {
       filter(c =>
         c.originalName.length >= 3
         || c.englishName.length >= 3),
-      debounceTime(300)
+      debounceTime(300),
+      switchMap(c => this.#dessertService.find(c))
     );
-
-  criteria = toSignal(this.criteria$, {
-    initialValue: {
-      originalName: '',
-      englishName: ''
-    }
-  });
 
   maxRating = computed(() => this.desserts().reduce(
     (acc, d) => Math.max(acc, d.rating),
@@ -53,29 +47,21 @@ export class DessertsComponent implements OnInit {
   ));
 
   constructor() {
-    // NOTE: We will get rid of this effect 
-    // later when switching to state management 
-    // and separating reading and writing
-    effect(() => {
-      this.search();
-    });
   }
 
   async ngOnInit() {
-    console.log('init');
-  }
+    this.criteria$
+      .pipe(takeUntilDestroyed())
+      .subscribe(desserts => {
 
-  async search() {
-    const { originalName, englishName } = this.criteria();
-
-    const filter: DessertFilter = {
-      originalName,
-      englishName
-    };
-
-    const desserts = await this.#dessertService.findPromise(filter);
-
-    this.desserts.set(desserts);
+        // NOTE: For the sake of simplicity, we stick 
+        // with a writable Signal for the time being, 
+        // while toSignal would lead to a readonly Signal.
+        // We will switch to unidirectional dataflow
+        // and readonly Signals, when we talk about 
+        // state management
+        this.desserts.set(desserts);
+      });  
   }
 
   async loadRatings() {
