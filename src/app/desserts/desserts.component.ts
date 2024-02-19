@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RatingService } from '../data/rating.service';
-import { DessertFilter } from '../data/dessert-filter';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
 
 @Component({
