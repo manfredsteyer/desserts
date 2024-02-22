@@ -9,7 +9,7 @@ import { injectCdBlink } from '../shared/inject-cd-blink';
   imports: [RatingComponent],
   templateUrl: './dessert-card.component.html',
   styleUrl: './dessert-card.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DessertCardComponent {
   dessert = input.required<Dessert>();
