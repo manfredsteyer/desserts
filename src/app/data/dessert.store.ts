@@ -3,7 +3,7 @@ import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { toRated } from './to-rated';
 import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
@@ -13,7 +13,7 @@ export const DessertStore = signalStore(
     withState({
         filter: {
             originalName: '',
-            englishName: '',
+            englishName: 'Cake',
         },
         ratings: {} as DessertIdToRatingMap,
         desserts: [] as Dessert[],
@@ -46,10 +46,16 @@ export const DessertStore = signalStore(
             }));
         },
         connectFilter: rxMethod<DessertFilter>(pipe(
-            filter(f => f.originalName.length >= 3 && f.englishName.length >= 3),
+            filter(f => f.originalName.length >= 3 || f.englishName.length >= 3),
             debounceTime(300),
             switchMap(f => dessertService.find(f)),
             tap(desserts => patchState(store, { desserts }))
         ))
-    }))
+    })),
+    withHooks({
+        onInit(store) {
+            const filter = store.filter;
+            store.connectFilter(filter);
+        }
+    })
 );
