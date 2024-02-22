@@ -20,9 +20,7 @@ export class DessertsComponent {
   originalName = this.#store.filter.originalName;
   englishName = this.#store.filter.englishName;
 
-  desserts = this.#store.desserts;
-
-  maxRating = this.#store.maxRating;
+  ratedDesserts = this.#store.ratedDesserts;
 
   constructor() {
     this.#store.loadDesserts();

@@ -2,9 +2,10 @@ import { computed, inject } from '@angular/core';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
-import { RatingService } from './rating.service';
+import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { toRated } from './to-rated';
 import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 
 export const DessertStore = signalStore(
@@ -14,13 +15,11 @@ export const DessertStore = signalStore(
             originalName: '',
             englishName: '',
         },
+        ratings: {} as DessertIdToRatingMap,
         desserts: [] as Dessert[],
     }),
     withComputed((store) => ({
-        maxRating: computed(() => store.desserts().reduce(
-            (acc, d) => Math.max(acc, d.rating),
-            0
-        ))
+        ratedDesserts: computed(() => toRated(store.desserts(), store.ratings()))
     })),
     withMethods((
         store,
@@ -36,23 +35,14 @@ export const DessertStore = signalStore(
         },
         async loadRatings(): Promise<void> {
             const ratings = await ratingService.loadExpertRatings();
-
-            patchState(store, state => ({
-                desserts: state.desserts.map(
-                    d => ratings[d.id] ?
-                        { ...d, rating: ratings[d.id] } :
-                        d
-                )
-            }));
+            patchState(store, { ratings });
         },
         updateRating(id: number, rating: number): void {
             patchState(store, state => ({
-                ...state,
-                desserts: state.desserts.map(
-                    d => (d.id === id) ?
-                        { ...d, rating: rating } :
-                        d
-                )
+                ratings: {
+                    ...state.ratings,
+                    [id]: rating
+                }
             }));
         },
         connectFilter: rxMethod<DessertFilter>(pipe(
@@ -61,5 +51,5 @@ export const DessertStore = signalStore(
             switchMap(f => dessertService.find(f)),
             tap(desserts => patchState(store, { desserts }))
         ))
-    })),
+    }))
 );
