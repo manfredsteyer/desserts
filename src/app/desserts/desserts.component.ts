@@ -26,11 +26,6 @@ export class DessertsComponent implements OnInit {
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
-  maxRating = computed(() => this.desserts().reduce(
-    (acc, d) => Math.max(acc, d.rating),
-    0
-  ));
-
   constructor() {
     effect(() => {
       console.log('originalName', this.originalName());
