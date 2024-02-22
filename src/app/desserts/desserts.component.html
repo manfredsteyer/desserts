@@ -15,10 +15,6 @@
     </div>
 </form>
 
-<div class="mb-10">
-    Max Rating: {{ maxRating() }}
-</div>
-
 <div class="card-grid">
     @for(dessert of ratedDesserts(); track dessert.id) {
     <app-dessert-card [dessert]="dessert" (ratingChange)="updateRating(dessert.id, $event)"></app-dessert-card>

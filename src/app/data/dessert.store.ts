@@ -2,7 +2,8 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
-import { RatingService } from './rating.service';
+import { DessertIdToRatingMap, RatingService } from './rating.service';
+import { toRated } from './to-rated';
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
@@ -18,16 +19,14 @@ export class DessertStore {
             originalName: '',
             englishName: '',
         },
+        ratings: {} as DessertIdToRatingMap,
         desserts: [] as Dessert[],
     });
 
     readonly filter = computed(() => this.#state().filter);
     readonly desserts = computed(() => this.#state().desserts);
-
-    readonly maxRating = computed(() => this.desserts().reduce(
-        (acc, d) => Math.max(acc, d.rating),
-        0
-    ));
+    readonly ratings = computed(() => this.#state().ratings);
+    readonly ratedDesserts = computed(() => toRated(this.desserts(), this.ratings()));
 
     updateFilter(filter: DessertFilter): void {
         this.#state.update(state => ({ ...state, filter }));
@@ -40,25 +39,19 @@ export class DessertStore {
 
     async loadRatings(): Promise<void> {
         const ratings = await this.#ratingService.loadExpertRatings();
-
         this.#state.update(state => ({
             ...state,
-            desserts: state.desserts.map(
-                d => ratings[d.id] ?
-                    { ...d, rating: ratings[d.id] } :
-                    d
-            )
+            ratings
         }));
     }
 
     updateRating(id: number, rating: number): void {
         this.#state.update(state => ({
             ...state,
-            desserts: state.desserts.map(
-                d => (d.id === id) ?
-                    { ...d, rating: rating } :
-                    d
-            )
+            ratings: {
+                ...state.ratings,
+                [id]: rating
+            }
         }));
     }
 }
