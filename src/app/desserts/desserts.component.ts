@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RatingService } from '../data/rating.service';
-import { DessertFilter } from '../data/dessert-filter';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop'
-import { combineLatest, debounceTime, filter } from 'rxjs';
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
+import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-desserts',
@@ -22,14 +21,16 @@ export class DessertsComponent implements OnInit {
   #ratingService = inject(RatingService);
 
   originalName = signal('');
-  englishName = signal('');
+  englishName = signal('Cake');
 
   desserts = signal<Dessert[]>([]);
+  ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   originalName$ = toObservable(this.originalName);
   englishName$ = toObservable(this.englishName);
 
-  criteria$ = combineLatest({
+  desserts$ = combineLatest({
     originalName: this.originalName$,
     englishName: this.englishName$
   })
@@ -37,53 +38,42 @@ export class DessertsComponent implements OnInit {
       filter(c =>
         c.originalName.length >= 3
         || c.englishName.length >= 3),
-      debounceTime(300)
+      debounceTime(300),
+      switchMap(c => this.#dessertService.find(c)),
+      takeUntilDestroyed()
     );
 
-  criteria = toSignal(this.criteria$, {
-    initialValue: {
-      originalName: '',
-      englishName: ''
-    }
-  });
-
-  maxRating = computed(() => this.desserts().reduce(
-    (acc, d) => Math.max(acc, d.rating),
-    0
-  ));
-
   async ngOnInit() {
-    this.search();
+    this.desserts$
+      .subscribe(desserts => {
+
+        // NOTE: For the sake of simplicity, we stick 
+        // with a writable Signal for the time being, 
+        // while toSignal would lead to a readonly Signal.
+        // We will switch to unidirectional dataflow
+        // and readonly Signals, when we talk about 
+        // state management
+        this.desserts.set(desserts);
+      });  
   }
 
-  async search() {
-    const { originalName, englishName } = this.criteria();
-
-    const filter: DessertFilter = {
-      originalName,
-      englishName
-    };
-
-    const desserts = await this.#dessertService.findPromise(filter);
-
-    this.desserts.set(desserts);
+  toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
+    return desserts.map(
+      d => ratings[d.id] ?
+        { ...d, rating: ratings[d.id] } :
+        d
+    );
   }
 
   async loadRatings() {
     const ratings = await this.#ratingService.loadExpertRatings();
-
-    this.desserts.update(desserts => desserts.map(
-      d => ratings[d.id] ?
-        { ...d, rating: ratings[d.id] } :
-        d
-    ));
+    this.ratings.set(ratings);
   }
 
   updateRating(id: number, rating: number): void {
-    this.desserts.update(desserts => desserts.map(
-      d => (d.id === id) ?
-        { ...d, rating: rating } :
-        d
-    ));
+    this.ratings.update(ratings => ({
+      ...ratings,
+      [id]: rating
+    }));
   }
 }
