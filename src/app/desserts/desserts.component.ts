@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RatingService } from '../data/rating.service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
 
 @Component({
@@ -24,11 +24,13 @@ export class DessertsComponent implements OnInit {
   englishName = signal('Cake');
 
   desserts = signal<Dessert[]>([]);
+  ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   originalName$ = toObservable(this.originalName);
   englishName$ = toObservable(this.englishName);
 
-  criteria$ = combineLatest({
+  desserts$ = combineLatest({
     originalName: this.originalName$,
     englishName: this.englishName$
   })
@@ -37,7 +39,8 @@ export class DessertsComponent implements OnInit {
         c.originalName.length >= 3
         || c.englishName.length >= 3),
       debounceTime(300),
-      switchMap(c => this.#dessertService.find(c))
+      switchMap(c => this.#dessertService.find(c)),
+      takeUntilDestroyed()
     );
 
   maxRating = computed(() => this.desserts().reduce(
@@ -49,8 +52,7 @@ export class DessertsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.criteria$
-      .pipe(takeUntilDestroyed())
+    this.desserts$
       .subscribe(desserts => {
 
         // NOTE: For the sake of simplicity, we stick 
@@ -63,21 +65,23 @@ export class DessertsComponent implements OnInit {
       });  
   }
 
-  async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-
-    this.desserts.update(desserts => desserts.map(
+  toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
+    return desserts.map(
       d => ratings[d.id] ?
         { ...d, rating: ratings[d.id] } :
         d
-    ));
+    );
+  }
+
+  async loadRatings() {
+    const ratings = await this.#ratingService.loadExpertRatings();
+    this.ratings.set(ratings);
   }
 
   updateRating(id: number, rating: number): void {
-    this.desserts.update(desserts => desserts.map(
-      d => (d.id === id) ?
-        { ...d, rating: rating } :
-        d
-    ));
+    this.ratings.update(ratings => ({
+      ...ratings,
+      [id]: rating
+    }));
   }
 }
