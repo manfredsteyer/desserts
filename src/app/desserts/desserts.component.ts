@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RatingService } from '../data/rating.service';
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertFilter } from '../data/dessert-filter';
 
 @Component({
@@ -23,6 +23,8 @@ export class DessertsComponent implements OnInit {
   englishName = signal('');
 
   desserts = signal<Dessert[]>([]);
+  ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   async ngOnInit() {
     this.search();
@@ -38,21 +40,23 @@ export class DessertsComponent implements OnInit {
     this.desserts.set(desserts);
   }
 
-  async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-
-    this.desserts.update(desserts => desserts.map(
+  toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
+    return desserts.map(
       d => ratings[d.id] ?
         { ...d, rating: ratings[d.id] } :
         d
-    ));
+    );
+  }
+
+  async loadRatings() {
+    const ratings = await this.#ratingService.loadExpertRatings();
+    this.ratings.set(ratings);
   }
 
   updateRating(id: number, rating: number): void {
-    this.desserts.update(desserts => desserts.map(
-      d => (d.id === id) ?
-        { ...d, rating: rating } :
-        d
-    ));
+    this.ratings.update(ratings => ({
+      ...ratings,
+      [id]: rating
+    }));
   }
 }
