@@ -2,11 +2,11 @@
     <div class="card-grid">
         <div>
             <label for="name">Original Name</label>
-            <input [ngModel]="originalName()" (ngModelChange)="originalName.set($event)" name="originalName">
+            <input [(ngModel)]="originalName" name="originalName">
         </div>
         <div>
             <label for="englishName">English Name</label>
-            <input [ngModel]="englishName()" (ngModelChange)="englishName.set($event)" name="englishName">
+            <input [(ngModel)]="englishName" name="englishName">
         </div>
     </div>
     <div class="mt-10 mb-10">
@@ -20,7 +20,7 @@
 </div>
 
 <div class="card-grid">
-    @for(dessert of desserts(); track dessert.id) {
+    @for(dessert of ratedDesserts(); track dessert.id) {
     <app-dessert-card [dessert]="dessert" (ratingChange)="updateRating(dessert.id, $event)"></app-dessert-card>
     }
     @empty {

@@ -2,25 +2,26 @@
   "version": "6.0",
   "nxVersion": "17.2.8",
   "deps": {
-    "@angular/animations": "^17.1.0",
-    "@angular/common": "^17.1.0",
-    "@angular/compiler": "^17.1.0",
-    "@angular/core": "^17.1.0",
-    "@angular/forms": "^17.1.0",
-    "@angular/platform-browser": "^17.1.0",
-    "@angular/platform-browser-dynamic": "^17.1.0",
-    "@angular/router": "^17.1.0",
+    "@angular/animations": "^17.2.1",
+    "@angular/common": "^17.2.1",
+    "@angular/compiler": "^17.2.1",
+    "@angular/core": "^17.2.1",
+    "@angular/forms": "^17.2.1",
+    "@angular/platform-browser": "^17.2.1",
+    "@angular/platform-browser-dynamic": "^17.2.1",
+    "@angular/router": "^17.2.1",
+    "@ngrx/signals": "^17.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3",
-    "@angular-devkit/build-angular": "^17.1.0",
+    "@angular-devkit/build-angular": "^17.2.0",
     "@angular-eslint/builder": "17.2.0",
     "@angular-eslint/eslint-plugin": "17.2.0",
     "@angular-eslint/eslint-plugin-template": "17.2.0",
     "@angular-eslint/schematics": "17.2.0",
     "@angular-eslint/template-parser": "17.2.0",
-    "@angular/cli": "^17.1.0",
-    "@angular/compiler-cli": "^17.1.0",
+    "@angular/cli": "^17.2.0",
+    "@angular/compiler-cli": "^17.2.1",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "6.18.0",
     "@typescript-eslint/parser": "6.18.0",
@@ -78,12 +79,8 @@
         "hash": "18179173623205849854"
       },
       {
-        "file": "package-lock.json",
-        "hash": "3528877698256382119"
-      },
-      {
         "file": "package.json",
-        "hash": "8516162770945100629"
+        "hash": "9137194804502175136"
       },
       {
         "file": "src/app/app.component.css",
@@ -147,7 +144,7 @@
       },
       {
         "file": "src/app/desserts/desserts.component.html",
-        "hash": "6402768368995618809"
+        "hash": "15795733559057387710"
       },
       {
         "file": "src/app/desserts/desserts.component.spec.ts",
@@ -155,7 +152,7 @@
       },
       {
         "file": "src/app/desserts/desserts.component.ts",
-        "hash": "9593007905205767473"
+        "hash": "6415478348907878598"
       },
       {
         "file": "src/app/rating/rating.component.css",

@@ -4,9 +4,8 @@ import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RatingService } from '../data/rating.service';
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertFilter } from '../data/dessert-filter';
-import { toObservable } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-desserts',
@@ -24,6 +23,8 @@ export class DessertsComponent {
   englishName = signal('');
 
   desserts = signal<Dessert[]>([]);
+  ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   maxRating = computed(() => this.desserts().reduce(
     (acc, d) => Math.max(acc, d.rating),
@@ -45,21 +46,23 @@ export class DessertsComponent {
     this.desserts.set(desserts);
   }
 
-  async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-
-    this.desserts.update(desserts => desserts.map(
+  toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
+    return desserts.map(
       d => ratings[d.id] ?
         { ...d, rating: ratings[d.id] } :
         d
-    ));
+    );
+  }
+
+  async loadRatings() {
+    const ratings = await this.#ratingService.loadExpertRatings();
+    this.ratings.set(ratings);
   }
 
   updateRating(id: number, rating: number): void {
-    this.desserts.update(desserts => desserts.map(
-      d => (d.id === id) ?
-        { ...d, rating: rating } :
-        d
-    ));
+    this.ratings.update(ratings => ({
+      ...ratings,
+      [id]: rating
+    }));
   }
 }
