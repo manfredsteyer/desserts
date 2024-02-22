@@ -48,9 +48,6 @@ export class DessertsComponent implements OnInit {
     0
   ));
 
-  constructor() {
-  }
-
   async ngOnInit() {
     this.desserts$
       .subscribe(desserts => {
