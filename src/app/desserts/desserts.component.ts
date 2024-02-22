@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -22,6 +22,8 @@ export class DessertsComponent implements OnInit {
   englishName = signal('');
 
   desserts = signal<Dessert[]>([]);
+  ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   async ngOnInit() {
     this.search();
@@ -47,13 +49,13 @@ export class DessertsComponent implements OnInit {
 
   async loadRatings() {
     const ratings = await this.#ratingService.loadExpertRatings();
-    const rated = this.toRated(this.desserts(), ratings);
-    this.desserts.set(rated);
+    this.ratings.set(ratings);
   }
 
   updateRating(id: number, rating: number): void {
-    const ratings = { [id]: rating };
-    const rated = this.toRated(this.desserts(), ratings);
-    this.desserts.set(rated);
+    this.ratings.update(ratings => ({
+      ...ratings,
+      [id]: rating
+    }));
   }
 }
