@@ -23,11 +23,11 @@ export class DessertsComponent {
   ratedDesserts = this.#store.ratedDesserts;
 
   constructor() {
-    this.#store.loadDesserts();
+    this.#store.load();
   }
 
   async search() {
-    this.#store.loadDesserts();
+    this.#store.load();
   }
 
   async loadRatings() {

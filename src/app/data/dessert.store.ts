@@ -3,11 +3,12 @@ import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { toRated } from './to-rated';
 import { withDataService } from './data-service.feature';
+import { DessertService } from './dessert.service';
 
 export const DessertStore = signalStore(
     { providedIn: 'root' },
    
-    withDataService(),
+    withDataService(DessertService, { englishName: 'Cake', originalName: ''}),
 
     //
     // Ratings-realated parts have been moved down
@@ -17,7 +18,7 @@ export const DessertStore = signalStore(
         ratings: {} as DessertIdToRatingMap,
     }),
     withComputed((store) => ({
-        ratedDesserts: computed(() => toRated(store.desserts(), store.ratings()))
+        ratedDesserts: computed(() => toRated(store.entities(), store.ratings()))
     })),
     withMethods((
         store,

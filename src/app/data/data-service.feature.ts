@@ -1,43 +1,41 @@
 import { signalStoreFeature } from "@ngrx/signals";
-import { inject } from '@angular/core';
-import { Dessert } from './dessert';
-import { DessertFilter } from './dessert-filter';
-import { DessertService } from './dessert.service';
+import { ProviderToken, inject } from '@angular/core';
 import { patchState, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
+import { Observable, debounceTime, pipe, switchMap, tap } from 'rxjs';
 
-export function withDataService() {
+export type DataService<F, E> = {
+    findPromise(filter: F): Promise<E[]>;
+    find(filter: F): Observable<E[]>;
+}
+
+export function withDataService<F, E>(dataServiceToken: ProviderToken<DataService<F, E>>, entityFilter: F) {
     return signalStoreFeature(
         withState({
-            filter: {
-                originalName: '',
-                englishName: 'Cake',
-            },
-            desserts: [] as Dessert[],
+            filter: entityFilter,
+            entities: [] as E[],
         }),
         withMethods((
             store,
-            dessertService = inject(DessertService),
+            dataService = inject(dataServiceToken),
         ) => ({
-            updateFilter(filter: DessertFilter): void {
+            updateFilter(filter: F): void {
                 patchState(store, { filter });
             },
-            async loadDesserts(): Promise<void> {
-                const desserts = await dessertService.findPromise(store.filter());
-                patchState(store, { desserts });
+            async load(): Promise<void> {
+                const entities = await dataService.findPromise(store.filter());
+                patchState(store, { entities: entities });
             },
-            loadDessertsByFilter: rxMethod<DessertFilter>(pipe(
-                filter(f => f.originalName.length >= 3 || f.englishName.length >= 3),
+            loadByFilter: rxMethod<F>(pipe(
                 debounceTime(300),
-                switchMap(f => dessertService.find(f)),
-                tap(desserts => patchState(store, { desserts }))
+                switchMap(f => dataService.find(f)),
+                tap(entities => patchState(store, { entities: entities }))
             ))
         })),
         withHooks({
             onInit(store) {
                 const filter = store.filter;
-                store.loadDessertsByFilter(filter);
+                store.loadByFilter(filter);
             }
         }),
     )
