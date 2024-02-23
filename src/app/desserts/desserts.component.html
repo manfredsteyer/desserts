@@ -1,24 +1,28 @@
 <form (appUpdate)="updateFilter($event)">
-    <div class="card-grid">
-        <div>
-            <label for="name">Original Name</label>
-            <input [ngModel]="originalName()" name="originalName" type="text">
-        </div>
-        <div>
-            <label for="englishName">English Name</label>
-            <input [ngModel]="englishName()" name="englishName">
-        </div>
+  <div class="card-grid">
+    <div>
+      <label for="name">Original Name</label>
+      <input [ngModel]="originalName()" name="originalName" type="text" />
     </div>
-    <div class="mt-10 mb-10">
-        <button type="button" (click)="loadRatings()" class="btn">Expert Ratings</button>
+    <div>
+      <label for="englishName">English Name</label>
+      <input [ngModel]="englishName()" name="englishName" />
     </div>
+  </div>
+  <div class="mt-10 mb-10">
+    <button type="button" (click)="loadRatings()" class="btn">
+      Expert Ratings
+    </button>
+  </div>
 </form>
 
 <div class="card-grid">
-    @for(dessert of ratedDesserts(); track dessert.id) {
-    <app-dessert-card [dessert]="dessert" (ratingChange)="updateRating(dessert.id, $event)"></app-dessert-card>
-    }
-    @empty {
+  @for (dessert of ratedDesserts(); track dessert.id) {
+    <app-dessert-card
+      [dessert]="dessert"
+      (ratingChange)="updateRating(dessert.id, $event)"
+    ></app-dessert-card>
+  } @empty {
     <p class="text-lg">Sorry, no desserts found.</p>
-    }
+  }
 </div>
