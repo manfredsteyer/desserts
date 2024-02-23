@@ -1,6 +1,11 @@
-import { signalStoreFeature } from '@ngrx/signals';
 import { ProviderToken, inject } from '@angular/core';
-import { patchState, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStoreFeature,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, debounceTime, pipe, switchMap, tap } from 'rxjs';
 
