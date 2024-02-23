@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, computed, model, signal, untracked } from '@angular/core';
+import { Component, computed, model, signal } from '@angular/core';
 
 const maxRatingInCheatMode = 500;
 
