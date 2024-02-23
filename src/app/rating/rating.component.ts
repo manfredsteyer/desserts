@@ -27,10 +27,15 @@ export class RatingComponent implements OnChanges {
   }
 
   #updateStars() {
-    this.stars = new Array<boolean>(this.maxRating);
-    for (let i = 0; i < this.maxRating; i++) {
-      this.stars[i] = (i < this.rating);
+    this.stars = this.toStars(this.rating, this.maxRating);
+  }
+
+  private toStars(rating: number, maxRating: number): Array<boolean> {
+    const stars = new Array<boolean>(rating);
+    for (let i = 0; i < maxRating; i++) {
+      stars[i] = (i < rating);
     }
+    return stars;
   }
 
   rate(rating: number): void {
