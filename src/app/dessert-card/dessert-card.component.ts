@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  effect,
-  input,
-  untracked,
-} from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 import { injectCdBlink } from '../shared/inject-cd-blink';
