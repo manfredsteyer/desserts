@@ -45,7 +45,7 @@ export const DessertStore = signalStore(
                 }
             }));
         },
-        connectFilter: rxMethod<DessertFilter>(pipe(
+        loadDessertsByFilter: rxMethod<DessertFilter>(pipe(
             filter(f => f.originalName.length >= 3 || f.englishName.length >= 3),
             debounceTime(300),
             switchMap(f => dessertService.find(f)),
@@ -55,7 +55,7 @@ export const DessertStore = signalStore(
     withHooks({
         onInit(store) {
             const filter = store.filter;
-            store.connectFilter(filter);
+            store.loadDessertsByFilter(filter);
         }
     })
 );
