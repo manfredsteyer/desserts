@@ -3,93 +3,93 @@
 @tailwind utilities;
 
 @layer components {
-    .h-menu {
-        @apply bg-gray-800 p-2 pl-10 text-white h-menu-vt
-    }
+  .h-menu {
+    @apply bg-gray-800 p-2 pl-10 text-white h-menu-vt;
+  }
 
-    .card-grid {
-        @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10
-    }
+  .card-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10;
+  }
 
-    .content {
-        @apply p-10
-    }
+  .content {
+    @apply p-10;
+  }
 
-    .card {
-        @apply bg-gray-100 h-full rounded-lg overflow-hidden shadow-md flex flex-col
-    }
+  .card {
+    @apply bg-gray-100 h-full rounded-lg overflow-hidden shadow-md flex flex-col;
+  }
 
-    .card-title {
-        @apply text-xl font-semibold pl-4 pt-4
-    }
+  .card-title {
+    @apply text-xl font-semibold pl-4 pt-4;
+  }
 
-    .card-subtitle {
-        @apply text-lg italic pl-4 pt-4
-    }
+  .card-subtitle {
+    @apply text-lg italic pl-4 pt-4;
+  }
 
-    .card-text {
-        @apply mt-2 text-gray-600
-    }
+  .card-text {
+    @apply mt-2 text-gray-600;
+  }
 
-    .card-body {
-        @apply p-4
-    }
+  .card-body {
+    @apply p-4;
+  }
 
-    .card-footer {
-        @apply p-4 mt-auto
-    }
+  .card-footer {
+    @apply p-4 mt-auto;
+  }
 
-    .btn {
-        @apply px-4 py-2 bg-gray-500 hover:bg-gray-400 text-white rounded
-    }
+  .btn {
+    @apply px-4 py-2 bg-gray-500 hover:bg-gray-400 text-white rounded;
+  }
 
-    .btn-primary {
-        @apply bg-sky-900 hover:bg-sky-600
-    }
+  .btn-primary {
+    @apply bg-sky-900 hover:bg-sky-600;
+  }
 }
 
 @layer base {
-    A {
-        @apply cursor-pointer
-    }
+  A {
+    @apply cursor-pointer;
+  }
 
-    b {
-        @apply text-sky-800 font-bold
-    }
+  b {
+    @apply text-sky-800 font-bold;
+  }
 
-    p {
-        @apply mt-5 mb-5
-    }
+  p {
+    @apply mt-5 mb-5;
+  }
 
-    h1 {
-        @apply text-2xl font-bold
-    }
+  h1 {
+    @apply text-2xl font-bold;
+  }
 
-    .title {
-        @apply bg-sky-900 p-2 pl-10 text-white text-lg font-bold title-vt;
-    }
+  .title {
+    @apply bg-sky-900 p-2 pl-10 text-white text-lg font-bold title-vt;
+  }
 
-    label {
-        @apply font-bold;
-        display: block;
-    }
+  label {
+    @apply font-bold;
+    display: block;
+  }
 
-    input {
-        @apply w-full max-w-96 size-10 focus:outline-none;
-        border-bottom: solid black 1px;
-    }
+  input {
+    @apply w-full max-w-96 size-10 focus:outline-none;
+    border-bottom: solid black 1px;
+  }
 }
 
 @layer utilities {
-    .title-vt {
-        view-transition-name: title;
-    }
+  .title-vt {
+    view-transition-name: title;
+  }
 
-    .h-menu-vt {
-        view-transition-name: h-menu;
-    }
+  .h-menu-vt {
+    view-transition-name: h-menu;
+  }
 
-    .product-name-vt {
-        view-transition-name: product-name
-    }
+  .product-name-vt {
+    view-transition-name: product-name;
+  }
 }
