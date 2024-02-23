@@ -12,7 +12,7 @@ import { FormUpdateDirective } from '../shared/form-update.directive';
   imports: [DessertCardComponent, FormsModule, JsonPipe, FormUpdateDirective],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DessertsComponent {
   #store = inject(DessertStore);
