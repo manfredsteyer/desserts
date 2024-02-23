@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { DessertService } from '../data/dessert.service';
 import { Dessert } from '../data/dessert';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -14,7 +22,7 @@ import { ToastService } from '../shared/toast';
   imports: [DessertCardComponent, FormsModule, JsonPipe],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
@@ -46,7 +54,7 @@ export class DessertsComponent implements OnInit {
   async search() {
     const filter: DessertFilter = {
       originalName: this.originalName(),
-      englishName: this.englishName()
+      englishName: this.englishName(),
     };
     const desserts = await this.#dessertService.findPromise(filter);
 
@@ -54,10 +62,8 @@ export class DessertsComponent implements OnInit {
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
-    return desserts.map(
-      d => ratings[d.id] ?
-        { ...d, rating: ratings[d.id] } :
-        d
+    return desserts.map((d) =>
+      ratings[d.id] ? { ...d, rating: ratings[d.id] } : d,
     );
   }
 
@@ -67,9 +73,9 @@ export class DessertsComponent implements OnInit {
   }
 
   updateRating(id: number, rating: number): void {
-    this.ratings.update(ratings => ({
+    this.ratings.update((ratings) => ({
       ...ratings,
-      [id]: rating
+      [id]: rating,
     }));
   }
 }
