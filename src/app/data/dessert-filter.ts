@@ -1,4 +1,4 @@
 export type DessertFilter = {
-    originalName: string;
-    englishName: string;
+  originalName: string;
+  englishName: string;
 };
