@@ -12,7 +12,7 @@ import { DessertFilter } from '../data/dessert-filter';
   standalone: true,
   imports: [DessertCardComponent, FormsModule, JsonPipe],
   templateUrl: './desserts.component.html',
-  styleUrl: './desserts.component.css'
+  styleUrl: './desserts.component.css',
 })
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
@@ -30,10 +30,10 @@ export class DessertsComponent implements OnInit {
   async search() {
     const filter: DessertFilter = {
       originalName: this.originalName,
-      englishName: this.englishName
+      englishName: this.englishName,
     };
     const desserts = await this.#dessertService.findPromise(filter);
-  
+
     this.desserts = desserts;
   }
 

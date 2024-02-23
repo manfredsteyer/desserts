@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 
 const maxRatingInCheatMode = 500;
 
@@ -7,7 +13,7 @@ const maxRatingInCheatMode = 500;
   standalone: true,
   imports: [],
   templateUrl: './rating.component.html',
-  styleUrl: './rating.component.css'
+  styleUrl: './rating.component.css',
 })
 export class RatingComponent implements OnChanges {
   @Input({ required: true })
@@ -22,7 +28,7 @@ export class RatingComponent implements OnChanges {
   ngOnChanges(): void {
     if (this.rating > this.maxRating) {
       this.maxRating = maxRatingInCheatMode;
-    } 
+    }
     this.#updateStars();
   }
 
@@ -33,7 +39,7 @@ export class RatingComponent implements OnChanges {
   private toStars(rating: number, maxRating: number): Array<boolean> {
     const stars = new Array<boolean>(rating);
     for (let i = 0; i < maxRating; i++) {
-      stars[i] = (i < rating);
+      stars[i] = i < rating;
     }
     return stars;
   }
@@ -48,5 +54,4 @@ export class RatingComponent implements OnChanges {
     this.maxRating = maxRatingInCheatMode;
     this.#updateStars();
   }
-
 }
