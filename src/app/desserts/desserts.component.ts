@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,14 +7,13 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DessertService } from '../data/dessert.service';
-import { Dessert } from '../data/dessert';
-import { DessertCardComponent } from '../dessert-card/dessert-card.component';
-import { JsonPipe } from '@angular/common';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
+import { Dessert } from '../data/dessert';
+import { DessertService } from '../data/dessert.service';
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
+import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 
 @Component({
   selector: 'app-desserts',
