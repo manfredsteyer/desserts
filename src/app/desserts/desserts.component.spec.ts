@@ -8,10 +8,9 @@ describe('DessertsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DessertsComponent]
-    })
-    .compileComponents();
-    
+      imports: [DessertsComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DessertsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
