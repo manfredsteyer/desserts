@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,13 +6,12 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DessertService } from '../data/dessert.service';
-import { Dessert } from '../data/dessert';
-import { DessertCardComponent } from '../dessert-card/dessert-card.component';
-import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
+import { Dessert } from '../data/dessert';
 import { DessertFilter } from '../data/dessert-filter';
+import { DessertService } from '../data/dessert.service';
+import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
+import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 
 @Component({
   selector: 'app-desserts',
