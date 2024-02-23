@@ -7,15 +7,14 @@ import { interval } from 'rxjs';
   standalone: true,
   imports: [],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.css'
+  styleUrl: './about.component.css',
 })
 export class AboutComponent {
-
   counter$ = interval(1000);
   counter = toSignal(this.counter$);
 
   constructor() {
-    this.counter$.subscribe(c => {
+    this.counter$.subscribe((c) => {
       console.log('counter$', c);
     });
 
@@ -23,5 +22,4 @@ export class AboutComponent {
       console.log('counter', this.counter());
     });
   }
-
 }
