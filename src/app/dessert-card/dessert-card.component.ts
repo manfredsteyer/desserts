@@ -7,7 +7,7 @@ import { RatingComponent } from '../rating/rating.component';
   standalone: true,
   imports: [RatingComponent],
   templateUrl: './dessert-card.component.html',
-  styleUrl: './dessert-card.component.css'
+  styleUrl: './dessert-card.component.css',
 })
 export class DessertCardComponent {
   @Input({ required: true })
