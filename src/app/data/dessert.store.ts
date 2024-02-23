@@ -1,8 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { Dessert } from './dessert';
-import { DessertFilter } from './dessert-filter';
-import { DessertService } from './dessert.service';
-import { DessertIdToRatingMap, RatingService } from './rating.service';
 import {
   patchState,
   signalStore,
@@ -10,6 +6,10 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
+import { Dessert } from './dessert';
+import { DessertFilter } from './dessert-filter';
+import { DessertService } from './dessert.service';
+import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
 
 export const DessertStore = signalStore(
