@@ -6,6 +6,7 @@ import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertFilter } from '../data/dessert-filter';
+import { ToastService } from '../shared/toast';
 
 @Component({
   selector: 'app-desserts',
@@ -19,6 +20,8 @@ export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
 
+  #toastService = inject(ToastService);
+
   originalName = signal('');
   englishName = signal('');
 
@@ -30,6 +33,10 @@ export class DessertsComponent implements OnInit {
     effect(() => {
       console.log('originalName', this.originalName());
       console.log('englishName', this.englishName());
+    });
+    effect(() => {
+      console.log('Hallo');
+      this.#toastService.show(this.desserts().length + ' desserts loaded!');
     });
   }
 
