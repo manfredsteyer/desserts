@@ -1,14 +1,21 @@
 <div class="card">
-    <h2 class="card-title">{{dessert().originalName}}</h2>
-    <i class="card-subtitle">{{dessert().englishName}}</i>
+  <h2 class="card-title">{{ dessert().originalName }}</h2>
+  <i class="card-subtitle">{{ dessert().englishName }}</i>
 
-    <img class="w-full mt-5" src="/assets/{{dessert().image}}" alt="Bildbeschreibung">
+  <img
+    class="w-full mt-5"
+    src="/assets/{{ dessert().image }}"
+    alt="Bildbeschreibung"
+  />
 
-    <div class="card-body mb-0">
-        <span class="card-text">{{dessert().description}}</span>
-    </div>
-    <div class="card-footer">
-        <div class="card-text mt-0 mb-5">{{dessert().kcal}} kcal</div>
-        <app-rating [rating]="dessert().rating" (ratingChange)="updateRating($event)"></app-rating>
-    </div>
+  <div class="card-body mb-0">
+    <span class="card-text">{{ dessert().description }}</span>
+  </div>
+  <div class="card-footer">
+    <div class="card-text mt-0 mb-5">{{ dessert().kcal }} kcal</div>
+    <app-rating
+      [rating]="dessert().rating"
+      (ratingChange)="updateRating($event)"
+    ></app-rating>
+  </div>
 </div>
