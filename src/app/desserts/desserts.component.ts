@@ -22,14 +22,6 @@ export class DessertsComponent {
 
   ratedDesserts = this.#store.ratedDesserts;
 
-  constructor() {
-    this.#store.loadDesserts();
-  }
-
-  async search() {
-    this.#store.loadDesserts();
-  }
-
   async loadRatings() {
     this.#store.loadRatings();
   }
