@@ -1,11 +1,16 @@
-import { signalStoreFeature } from '@ngrx/signals';
 import { inject } from '@angular/core';
+import {
+  patchState,
+  signalStoreFeature,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
-import { patchState, withHooks, withMethods, withState } from '@ngrx/signals';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 
 export function withDataService() {
   return signalStoreFeature(
