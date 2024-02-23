@@ -40,14 +40,16 @@ export class ToastComponent implements OnInit {
   toastService = inject(ToastService);
   message = '';
 
-  ngOnInit(): void {
-    let handle: unknown;
-    this.toastService.message$.subscribe((message) => {
-      clearTimeout(handle as number);
-      this.message = message;
-      handle = setTimeout(() => {
-        this.message = '';
-      }, 3000);
-    });
-  }
+    ngOnInit(): void {
+        let handle: unknown;
+        this.toastService.message$.subscribe(message => {
+            if (handle) {
+                clearTimeout(handle as number);
+            }
+            this.message = message;
+            handle = setTimeout(() => {
+                this.message = '';
+            }, 3000);
+        });
+    }
 }
