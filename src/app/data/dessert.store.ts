@@ -15,16 +15,11 @@ export const DessertStore = signalStore(
             originalName: '',
             englishName: 'Cake',
         },
-        ratings: {} as DessertIdToRatingMap,
         desserts: [] as Dessert[],
     }),
-    withComputed((store) => ({
-        ratedDesserts: computed(() => toRated(store.desserts(), store.ratings()))
-    })),
     withMethods((
         store,
         dessertService = inject(DessertService),
-        ratingService = inject(RatingService)
     ) => ({
         updateFilter(filter: DessertFilter): void {
             patchState(store, { filter });
@@ -32,18 +27,6 @@ export const DessertStore = signalStore(
         async loadDesserts(): Promise<void> {
             const desserts = await dessertService.findPromise(store.filter());
             patchState(store, { desserts });
-        },
-        async loadRatings(): Promise<void> {
-            const ratings = await ratingService.loadExpertRatings();
-            patchState(store, { ratings });
-        },
-        updateRating(id: number, rating: number): void {
-            patchState(store, state => ({
-                ratings: {
-                    ...state.ratings,
-                    [id]: rating
-                }
-            }));
         },
         loadDessertsByFilter: rxMethod<DessertFilter>(pipe(
             filter(f => f.originalName.length >= 3 || f.englishName.length >= 3),
@@ -57,5 +40,34 @@ export const DessertStore = signalStore(
             const filter = store.filter;
             store.loadDessertsByFilter(filter);
         }
-    })
+    }),
+
+    //
+    // Ratings-realated parts have been moved down
+    // to make refactoring easier
+    //
+    withState({
+        ratings: {} as DessertIdToRatingMap,
+    }),
+    withComputed((store) => ({
+        ratedDesserts: computed(() => toRated(store.desserts(), store.ratings()))
+    })),
+    withMethods((
+        store,
+        ratingService = inject(RatingService)
+    ) => ({
+        async loadRatings(): Promise<void> {
+            const ratings = await ratingService.loadExpertRatings();
+            patchState(store, { ratings });
+        },
+        updateRating(id: number, rating: number): void {
+            patchState(store, state => ({
+                ratings: {
+                    ...state.ratings,
+                    [id]: rating
+                }
+            }));
+        },
+    })),
+
 );
