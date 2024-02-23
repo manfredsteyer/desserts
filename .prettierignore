@@ -1,0 +1,4 @@
+/dist
+/coverage
+/.nx/cache
+.angular
