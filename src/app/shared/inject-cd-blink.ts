@@ -8,22 +8,26 @@ export function injectCdBlink(): () => null {
   const blink = () => {
     // Dirty Hack used to visualize the change detector
 
-    const selectedColor = element.nativeElement.firstChild.style.backgroundColor;
-    const visualizerColor = 'crimson'
+    const selectedColor =
+      element.nativeElement.firstChild.style.backgroundColor;
+    const visualizerColor = 'crimson';
 
-    !active && zone.runOutsideAngular(() => {
-      active = true;
-      setTimeout(() => {
-        element.nativeElement.firstChild.style.backgroundColor = visualizerColor;
+    !active &&
+      zone.runOutsideAngular(() => {
+        active = true;
+        setTimeout(() => {
+          element.nativeElement.firstChild.style.backgroundColor =
+            visualizerColor;
+        });
+        setTimeout(() => {
+          element.nativeElement.firstChild.style.backgroundColor =
+            selectedColor;
+          active = false;
+        }, 500);
       });
-      setTimeout(() => {
-        element.nativeElement.firstChild.style.backgroundColor = selectedColor;
-        active = false;
-      }, 500);
-    });
 
     return null;
-  }
+  };
 
   return blink;
 }
