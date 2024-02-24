@@ -22,7 +22,9 @@ export class DessertStore {
     desserts: [] as Dessert[],
   });
 
-  readonly filter = computed(() => this.#state().filter);
+  readonly originalName = computed(() => this.#state().filter.originalName);
+  readonly englishName = computed(() => this.#state().filter.englishName);
+
   readonly desserts = computed(() => this.#state().desserts);
   readonly ratings = computed(() => this.#state().ratings);
   readonly ratedDesserts = computed(() =>
