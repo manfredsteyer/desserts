@@ -14,6 +14,7 @@ import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
+import { ToastService } from '../shared/toast';
 
 @Component({
   selector: 'app-desserts',
@@ -26,6 +27,8 @@ import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
+
+  #toastService = inject(ToastService);
 
   originalName = signal('');
   englishName = signal('');
@@ -46,6 +49,11 @@ export class DessertsComponent implements OnInit {
       },
       { allowSignalWrites: true },
     );
+
+    effect(() => {
+      console.log('Hallo');
+      this.#toastService.show(this.desserts().length + ' desserts loaded!');
+    });
   }
 
   async ngOnInit() {
