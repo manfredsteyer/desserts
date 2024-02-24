@@ -52,7 +52,6 @@ export class DessertsComponent implements OnInit {
     }, 3000);
 
     effect(() => {
-      console.log('Hallo');
       this.#toastService.show(this.desserts().length + ' desserts loaded!');
     });
   }
