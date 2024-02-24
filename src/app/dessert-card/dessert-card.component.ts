@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Output,
-  effect,
   input,
 } from '@angular/core';
 import { Dessert } from '../data/dessert';
@@ -24,12 +23,6 @@ export class DessertCardComponent {
 
   @Output()
   ratingChange = new EventEmitter<number>();
-
-  constructor() {
-    effect(() => {
-      console.log('dessert', this.dessert().englishName, this.dessert().rating);
-    });
-  }
 
   updateRating(newRating: number): void {
     this.ratingChange.emit(newRating);
