@@ -8,6 +8,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, debounceTime, pipe, switchMap, tap } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
 
 export type DataService<F, E> = {
   findPromise(filter: F): Promise<E[]>;
@@ -21,9 +22,14 @@ export function withDataService<F, E>(
   return signalStoreFeature(
     withState({
       filter: entityFilter,
+      loading: false,
+      error: null as unknown,
       entities: [] as E[],
     }),
-    withMethods((store, dataService = inject(dataServiceToken)) => ({
+    withMethods((
+      store,
+      dataService = inject(dataServiceToken),
+    ) => ({
       updateFilter(filter: F): void {
         patchState(store, { filter });
       },
@@ -34,8 +40,18 @@ export function withDataService<F, E>(
       loadByFilter: rxMethod<F>(
         pipe(
           debounceTime(300),
-          switchMap((f) => dataService.find(f)),
-          tap((entities) => patchState(store, { entities: entities })),
+          tap(() => patchState(store, { loading: true })),
+          switchMap((f) => dataService.find(f).pipe(
+            tapResponse({
+              next: (entities) => {
+                patchState(store, { entities, loading: false });
+              },
+              error: (error) => {
+                console.error(error);
+                patchState(store, { error, loading: false })
+              },
+            })
+          )),
         ),
       ),
     })),
