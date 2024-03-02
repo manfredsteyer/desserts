@@ -27,6 +27,7 @@ export class DessertsComponent {
 
   originalName = signal('');
   englishName = signal('');
+  loading = signal(false);
 
   desserts = signal<Dessert[]>([]);
   ratings = signal<DessertIdToRatingMap>({});
@@ -42,9 +43,14 @@ export class DessertsComponent {
       englishName: this.englishName(),
     };
 
-    const desserts = await this.#dessertService.findPromise(filter);
-
-    this.desserts.set(desserts);
+    try {
+      this.loading.set(true);
+      const desserts = await this.#dessertService.findPromise(filter);
+      this.desserts.set(desserts);
+    }
+    finally {
+      this.loading.set(false);
+    }
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -54,8 +60,14 @@ export class DessertsComponent {
   }
 
   async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-    this.ratings.set(ratings);
+    try {
+      this.loading.set(true);
+      const ratings = await this.#ratingService.loadExpertRatings();
+      this.ratings.set(ratings);
+    }
+    finally {
+      this.loading.set(false);
+    }
   }
 
   updateRating(id: number, rating: number): void {

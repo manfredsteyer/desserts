@@ -18,6 +18,7 @@ export class DessertStore {
       originalName: '',
       englishName: '',
     },
+    loading: false,
     ratings: {} as DessertIdToRatingMap,
     desserts: [] as Dessert[],
   });
@@ -27,6 +28,9 @@ export class DessertStore {
 
   readonly desserts = computed(() => this.#state().desserts);
   readonly ratings = computed(() => this.#state().ratings);
+
+  readonly loading = computed(() => this.#state().loading);
+
   readonly ratedDesserts = computed(() =>
     toRated(this.desserts(), this.ratings()),
   );
@@ -36,18 +40,32 @@ export class DessertStore {
   }
 
   async loadDesserts(): Promise<void> {
-    const desserts = await this.#dessertService.findPromise(
-      this.#state().filter,
-    );
-    this.#state.update((state) => ({ ...state, desserts }));
+    try {
+      this.#state.update((state) => ({ ...state, loading: true }));
+
+      const desserts = await this.#dessertService.findPromise(
+        this.#state().filter,
+      );
+      this.#state.update((state) => ({ ...state, desserts }));
+    }
+    finally {
+      this.#state.update((state) => ({ ...state, loading: false }));
+    }
   }
 
   async loadRatings(): Promise<void> {
-    const ratings = await this.#ratingService.loadExpertRatings();
-    this.#state.update((state) => ({
-      ...state,
-      ratings,
-    }));
+    try {
+      this.#state.update((state) => ({ ...state, loading: true }));
+
+      const ratings = await this.#ratingService.loadExpertRatings();
+      this.#state.update((state) => ({
+        ...state,
+        ratings,
+      }));
+    }
+    finally {
+      this.#state.update((state) => ({ ...state, loading: false }));
+    }
   }
 
   updateRating(id: number, rating: number): void {
