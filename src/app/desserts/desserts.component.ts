@@ -20,6 +20,7 @@ export class DessertsComponent implements OnInit {
 
   originalName = '';
   englishName = '';
+  loading = false;
 
   desserts: Dessert[] = [];
 
@@ -32,9 +33,16 @@ export class DessertsComponent implements OnInit {
       originalName: this.originalName,
       englishName: this.englishName,
     };
-    const desserts = await this.#dessertService.findPromise(filter);
 
-    this.desserts = desserts;
+    try {
+      this.loading = true;
+      const desserts = await this.#dessertService.findPromise(filter);
+      this.desserts = desserts;
+    }
+    finally {
+      this.loading = false;
+    }
+    // Remarks: A Global Error Handler displays error
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -44,9 +52,16 @@ export class DessertsComponent implements OnInit {
   }
 
   async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-    const rated = this.toRated(this.desserts, ratings);
-    this.desserts = rated;
+    try {
+      this.loading = true;
+      const ratings = await this.#ratingService.loadExpertRatings();
+      const rated = this.toRated(this.desserts, ratings);
+      this.desserts = rated;
+    }
+    finally {
+      this.loading = false;
+    }
+    // Remarks: A Global Error Handler displays error
   }
 
   updateRating(id: number, rating: number): void {
