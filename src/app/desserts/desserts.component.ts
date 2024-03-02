@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { combineLatest, debounceTime, filter, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, filter, switchMap, tap } from 'rxjs';
 import { Dessert } from '../data/dessert';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
@@ -29,6 +29,7 @@ export class DessertsComponent implements OnInit {
 
   originalName = signal('');
   englishName = signal('Cake');
+  loading = signal(false);
 
   desserts = signal<Dessert[]>([]);
   ratings = signal<DessertIdToRatingMap>({});
@@ -43,7 +44,9 @@ export class DessertsComponent implements OnInit {
   }).pipe(
     filter((c) => c.originalName.length >= 3 || c.englishName.length >= 3),
     debounceTime(300),
+    tap(() => this.loading.set(true)),
     switchMap((c) => this.#dessertService.find(c)),
+    tap(() => this.loading.set(false)),
     takeUntilDestroyed(),
   );
 
@@ -66,8 +69,14 @@ export class DessertsComponent implements OnInit {
   }
 
   async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-    this.ratings.set(ratings);
+    try {
+      this.loading.set(true);
+      const ratings = await this.#ratingService.loadExpertRatings();
+      this.ratings.set(ratings);
+    }
+    finally {
+      this.loading.set(false);
+    }
   }
 
   updateRating(id: number, rating: number): void {
