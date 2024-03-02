@@ -11,6 +11,8 @@ import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
+import { ToastService } from '../shared/toast';
+import { tapResponse } from '@ngrx/operators';
 
 export function withDataService() {
   return signalStoreFeature(
@@ -19,9 +21,14 @@ export function withDataService() {
         originalName: '',
         englishName: 'Cake',
       },
+      loading: false,
       desserts: [] as Dessert[],
     }),
-    withMethods((store, dessertService = inject(DessertService)) => ({
+    withMethods((
+      store,
+      dessertService = inject(DessertService),
+      toastService = inject(ToastService)
+    ) => ({
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
       },
@@ -35,8 +42,19 @@ export function withDataService() {
             (f) => f.originalName.length >= 3 || f.englishName.length >= 3,
           ),
           debounceTime(300),
-          switchMap((f) => dessertService.find(f)),
-          tap((desserts) => patchState(store, { desserts })),
+          tap(() => patchState(store, { loading: true })),
+          switchMap((f) => dessertService.find(f).pipe(
+            tapResponse({
+              next: (desserts) => {
+                patchState(store, { desserts, loading: false });
+              },
+              error: (error) => {
+                toastService.show('Error loading desserts!');
+                console.error(error);
+                patchState(store, { loading: false })
+              },
+            })
+          )),
         ),
       ),
     })),
