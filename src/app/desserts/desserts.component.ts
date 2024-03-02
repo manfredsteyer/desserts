@@ -20,6 +20,7 @@ export class DessertsComponent implements OnInit {
 
   originalName = signal('');
   englishName = signal('');
+  loading = signal(false);
 
   desserts = signal<Dessert[]>([]);
 
@@ -32,9 +33,15 @@ export class DessertsComponent implements OnInit {
       originalName: this.originalName(),
       englishName: this.englishName(),
     };
-    const desserts = await this.#dessertService.findPromise(filter);
 
-    this.desserts.set(desserts);
+    try {
+      this.loading.set(true);
+      const desserts = await this.#dessertService.findPromise(filter);
+      this.desserts.set(desserts);
+    }
+    finally {
+      this.loading.set(false);
+    }
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -44,9 +51,15 @@ export class DessertsComponent implements OnInit {
   }
 
   async loadRatings() {
-    const ratings = await this.#ratingService.loadExpertRatings();
-    const rated = this.toRated(this.desserts(), ratings);
-    this.desserts.set(rated);
+    try {
+      this.loading.set(true);
+      const ratings = await this.#ratingService.loadExpertRatings();
+      const rated = this.toRated(this.desserts(), ratings);
+      this.desserts.set(rated);
+    }
+    finally {
+      this.loading.set(false);
+    }
   }
 
   updateRating(id: number, rating: number): void {
