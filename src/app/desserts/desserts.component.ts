@@ -19,6 +19,7 @@ export class DessertsComponent {
 
   originalName = this.#store.originalName;
   englishName = this.#store.englishName;
+  loading = this.#store.loading;
 
   ratedDesserts = this.#store.ratedDesserts;
 
