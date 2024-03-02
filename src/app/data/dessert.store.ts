@@ -14,6 +14,8 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
+import { tapResponse } from '@ngrx/operators';
+import { ToastService } from '../shared/toast';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -22,9 +24,14 @@ export const DessertStore = signalStore(
       originalName: '',
       englishName: 'Cake',
     },
+    loading: false,
     desserts: [] as Dessert[],
   }),
-  withMethods((store, dessertService = inject(DessertService)) => ({
+  withMethods((
+    store,
+    dessertService = inject(DessertService),
+    toastService = inject(ToastService)
+  ) => ({
     updateFilter(filter: DessertFilter): void {
       patchState(store, { filter });
     },
@@ -34,10 +41,23 @@ export const DessertStore = signalStore(
     },
     loadDessertsByFilter: rxMethod<DessertFilter>(
       pipe(
-        filter((f) => f.originalName.length >= 3 || f.englishName.length >= 3),
+        filter(
+          (f) => f.originalName.length >= 3 || f.englishName.length >= 3,
+        ),
         debounceTime(300),
-        switchMap((f) => dessertService.find(f)),
-        tap((desserts) => patchState(store, { desserts })),
+        tap(() => patchState(store, { loading: true })),
+        switchMap((f) => dessertService.find(f).pipe(
+          tapResponse({
+            next: (desserts) => {
+              patchState(store, { desserts, loading: false });
+            },
+            error: (error) => {
+              toastService.show('Error loading desserts!');
+              console.error(error);
+              patchState(store, { loading: false })
+            },
+          })
+        )),
       ),
     ),
   })),
