@@ -19,6 +19,7 @@ export const DessertStore = signalStore(
       originalName: '',
       englishName: '',
     },
+    loading: false,
     ratings: {} as DessertIdToRatingMap,
     desserts: [] as Dessert[],
   }),
@@ -35,12 +36,24 @@ export const DessertStore = signalStore(
         patchState(store, { filter });
       },
       async loadDesserts(): Promise<void> {
-        const desserts = await dessertService.findPromise(store.filter());
-        patchState(store, { desserts });
+        try {
+          patchState(store, { loading: true });
+          const desserts = await dessertService.findPromise(store.filter());
+          patchState(store, { desserts });
+        }
+        finally {
+          patchState(store, { loading: false });
+        }
       },
       async loadRatings(): Promise<void> {
-        const ratings = await ratingService.loadExpertRatings();
-        patchState(store, { ratings });
+        try {
+          patchState(store, { loading: true });
+          const ratings = await ratingService.loadExpertRatings();
+          patchState(store, { ratings });
+        }
+        finally {
+          patchState(store, { loading: false });
+        }
       },
       updateRating(id: number, rating: number): void {
         patchState(store, (state) => ({

@@ -21,7 +21,8 @@ export class DessertsComponent {
   englishName = this.#store.filter.englishName;
 
   ratedDesserts = this.#store.ratedDesserts;
-
+  loading = this.#store.loading;
+  
   constructor() {
     this.#store.loadDesserts();
   }
