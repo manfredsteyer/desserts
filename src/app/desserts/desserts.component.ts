@@ -21,6 +21,7 @@ export class DessertsComponent {
   englishName = this.#store.filter.englishName;
 
   ratedDesserts = this.#store.ratedDesserts;
+  loading = this.#store.loading;
 
   async loadRatings() {
     this.#store.loadRatings();

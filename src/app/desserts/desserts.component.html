@@ -13,6 +13,8 @@
     <button type="button" (click)="loadRatings()" class="btn">
       Expert Ratings
     </button>
+
+    @if(loading()) { <div class="loader"></div> }
   </div>
 </form>
 
