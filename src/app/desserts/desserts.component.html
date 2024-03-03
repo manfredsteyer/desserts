@@ -27,7 +27,8 @@
       [dessert]="dessert"
       (ratingChange)="updateRating(dessert.id, $event)"
     ></app-dessert-card>
-  } @empty {
+  } 
+  @if (desserts().length === 0 && !loading()) {
     <p class="text-lg">Sorry, no desserts found.</p>
   }
 </div>
