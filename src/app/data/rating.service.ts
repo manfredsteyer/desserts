@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Observable, lastValueFrom, of } from 'rxjs';
 
 export type DessertIdToRatingMap = Record<number, number>;
 
 @Injectable({ providedIn: 'root' })
 export class RatingService {
-  async loadExpertRatings(): Promise<DessertIdToRatingMap> {
-    return Promise.resolve({
+  loadExpertRatings(): Observable<DessertIdToRatingMap> {
+    return of({
       10: 500,
     });
+  }
+  loadExpertRatingsPromise(): Promise<DessertIdToRatingMap> {
+    return lastValueFrom(this.loadExpertRatings());
   }
 }
