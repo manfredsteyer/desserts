@@ -1,10 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
-import { ToastService } from '../shared/toast';
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
@@ -50,17 +50,17 @@ export class DessertStore {
         this.#state.update((state) => ({
           ...state,
           desserts,
-          loading: false
+          loading: false,
         }));
       },
       error: (error) => {
         this.#state.update((state) => ({
           ...state,
-          loading: false
+          loading: false,
         }));
         this.#toastService.show('Error loading desserts!');
         console.error(error);
-      }
+      },
     });
   }
 
@@ -72,7 +72,7 @@ export class DessertStore {
         this.#state.update((state) => ({
           ...state,
           ratings,
-          loading: false
+          loading: false,
         }));
       },
       error: (error) => {
@@ -80,9 +80,9 @@ export class DessertStore {
         console.error(error);
         this.#state.update((state) => ({
           ...state,
-          loading: false
+          loading: false,
         }));
-      }
+      },
     });
   }
 
