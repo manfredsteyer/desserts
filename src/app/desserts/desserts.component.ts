@@ -56,7 +56,7 @@ export class DessertsComponent {
         this.loading.set(false);
         this.#toastService.show('Error loading desserts!');
         console.error(error);
-      }
+      },
     });
   }
 
@@ -68,7 +68,7 @@ export class DessertsComponent {
 
   async loadRatings() {
     this.loading.set(true);
-    
+
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
         this.ratings.set(ratings);
@@ -78,7 +78,7 @@ export class DessertsComponent {
         this.#toastService.show('Error loading ratings!');
         console.error(error);
         this.loading.set(false);
-      }      
+      },
     });
   }
 

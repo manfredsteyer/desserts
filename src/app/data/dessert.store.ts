@@ -47,8 +47,7 @@ export class DessertStore {
         this.#state().filter,
       );
       this.#state.update((state) => ({ ...state, desserts }));
-    }
-    finally {
+    } finally {
       this.#state.update((state) => ({ ...state, loading: false }));
     }
   }
@@ -62,8 +61,7 @@ export class DessertStore {
         ...state,
         ratings,
       }));
-    }
-    finally {
+    } finally {
       this.#state.update((state) => ({ ...state, loading: false }));
     }
   }
