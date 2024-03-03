@@ -4,6 +4,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
+import { ToastService } from '../shared/toast';
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
@@ -12,6 +13,8 @@ export class DessertStore {
   // When working with lightweight stores
   // rating could be put in a store of itself.
   #ratingService = inject(RatingService);
+
+  #toastService = inject(ToastService);
 
   #state = signal({
     filter: {
@@ -39,33 +42,48 @@ export class DessertStore {
     this.#state.update((state) => ({ ...state, filter }));
   }
 
-  async loadDesserts(): Promise<void> {
-    try {
-      this.#state.update((state) => ({ ...state, loading: true }));
+  loadDesserts(): void {
+    this.#state.update((state) => ({ ...state, loading: true }));
 
-      const desserts = await this.#dessertService.findPromise(
-        this.#state().filter,
-      );
-      this.#state.update((state) => ({ ...state, desserts }));
-    }
-    finally {
-      this.#state.update((state) => ({ ...state, loading: false }));
-    }
+    this.#dessertService.find(this.#state().filter).subscribe({
+      next: (desserts) => {
+        this.#state.update((state) => ({
+          ...state,
+          desserts,
+          loading: false
+        }));
+      },
+      error: (error) => {
+        this.#state.update((state) => ({
+          ...state,
+          loading: false
+        }));
+        this.#toastService.show('Error loading desserts!');
+        console.error(error);
+      }
+    });
   }
 
-  async loadRatings(): Promise<void> {
-    try {
-      this.#state.update((state) => ({ ...state, loading: true }));
+  loadRatings(): void {
+    this.#state.update((state) => ({ ...state, loading: true }));
 
-      const ratings = await this.#ratingService.loadExpertRatings();
-      this.#state.update((state) => ({
-        ...state,
-        ratings,
-      }));
-    }
-    finally {
-      this.#state.update((state) => ({ ...state, loading: false }));
-    }
+    this.#ratingService.loadExpertRatings().subscribe({
+      next: (ratings) => {
+        this.#state.update((state) => ({
+          ...state,
+          ratings,
+          loading: false
+        }));
+      },
+      error: (error) => {
+        this.#toastService.show('Error loading ratings!');
+        console.error(error);
+        this.#state.update((state) => ({
+          ...state,
+          loading: false
+        }));
+      }
+    });
   }
 
   updateRating(id: number, rating: number): void {
