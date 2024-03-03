@@ -38,8 +38,7 @@ export class DessertsComponent implements OnInit {
       this.loading.set(true);
       const desserts = await this.#dessertService.findPromise(filter);
       this.desserts.set(desserts);
-    }
-    finally {
+    } finally {
       this.loading.set(false);
     }
   }
@@ -56,8 +55,7 @@ export class DessertsComponent implements OnInit {
       const ratings = await this.#ratingService.loadExpertRatings();
       const rated = this.toRated(this.desserts(), ratings);
       this.desserts.set(rated);
-    }
-    finally {
+    } finally {
       this.loading.set(false);
     }
   }

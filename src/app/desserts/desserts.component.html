@@ -10,14 +10,26 @@
     </div>
   </div>
   <div class="mt-10 mb-10">
-    <button type="submit" (click)="search()" class="btn btn-primary" [disabled]="loading()">
+    <button
+      type="submit"
+      (click)="search()"
+      class="btn btn-primary"
+      [disabled]="loading()"
+    >
       Search
     </button>
-    <button type="button" (click)="loadRatings()" class="btn ml-2" [disabled]="loading()">
+    <button
+      type="button"
+      (click)="loadRatings()"
+      class="btn ml-2"
+      [disabled]="loading()"
+    >
       Expert Ratings
     </button>
 
-    @if(loading()) { <div class="loader"></div> }
+    @if (loading()) {
+      <div class="loader"></div>
+    }
   </div>
 </form>
 
