@@ -41,25 +41,19 @@ export const DessertStore = signalStore(
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
       },
-      async loadDesserts(): Promise<void> {
-        try {
-          patchState(store, { loading: true });
-          const desserts = await dessertService.findPromise(store.filter());
-          patchState(store, { desserts });
-        }
-        finally {
-          patchState(store, { loading: false });
-        }
-      },
-      async loadRatings(): Promise<void> {
-        try {
-          patchState(store, { loading: true });
-          const ratings = await ratingService.loadExpertRatings();
-          patchState(store, { ratings });
-        }
-        finally {
-          patchState(store, { loading: false });
-        }
+      loadRatings(): void {
+        patchState(store, { loading: true });
+    
+        ratingService.loadExpertRatings().subscribe({
+          next: (ratings) => {
+            patchState(store, { ratings, loading: false });
+          },
+          error: (error) => {
+            patchState(store, { loading: false });
+            toastService.show('Error loading ratings!');
+            console.error(error);
+          }
+        });
       },
       updateRating(id: number, rating: number): void {
         patchState(store, (state) => ({
