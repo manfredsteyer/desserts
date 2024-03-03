@@ -27,6 +27,7 @@ import { ToastService } from '../shared/toast';
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
+  #toastService = inject(ToastService);
 
   #toastService = inject(ToastService);
 
@@ -66,14 +67,19 @@ export class DessertsComponent implements OnInit {
       englishName: this.englishName(),
     };
 
-    try {
-      this.loading.set(true);
-      const desserts = await this.#dessertService.findPromise(filter);
-      this.desserts.set(desserts);
-    }
-    finally {
-      this.loading.set(false);
-    }
+    this.loading.set(true);
+
+    this.#dessertService.find(filter).subscribe({
+      next: (desserts) => {
+        this.desserts.set(desserts);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this.loading.set(false);
+        this.#toastService.show('Error loading desserts!');
+        console.error(error);
+      }
+    });
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -83,14 +89,19 @@ export class DessertsComponent implements OnInit {
   }
 
   async loadRatings() {
-    try {
-      this.loading.set(true);
-      const ratings = await this.#ratingService.loadExpertRatings();
-      this.ratings.set(ratings);
-    }
-    finally {
-      this.loading.set(false);
-    }
+    this.loading.set(true);
+    
+    this.#ratingService.loadExpertRatings().subscribe({
+      next: (ratings) => {
+        this.ratings.set(ratings);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this.#toastService.show('Error loading ratings!');
+        console.error(error);
+        this.loading.set(false);
+      }      
+    });
   }
 
   updateRating(id: number, rating: number): void {
