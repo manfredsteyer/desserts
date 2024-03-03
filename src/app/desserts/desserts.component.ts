@@ -23,7 +23,7 @@ export class DessertsComponent {
   ratedDesserts = this.#store.ratedDesserts;
   loading = this.#store.loading;
 
-  async loadRatings() {
+  loadRatings() {
     this.#store.loadRatings();
   }
 
