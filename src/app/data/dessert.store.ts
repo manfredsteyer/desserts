@@ -1,4 +1,5 @@
 import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -8,14 +9,13 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, debounceTime, filter, pipe, switchMap, tap, throwError } from 'rxjs';
+import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
+import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
-import { tapResponse } from '@ngrx/operators';
-import { ToastService } from '../shared/toast';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -36,14 +36,14 @@ export const DessertStore = signalStore(
       store,
       dessertService = inject(DessertService),
       ratingService = inject(RatingService),
-      toastService = inject(ToastService)
+      toastService = inject(ToastService),
     ) => ({
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
       },
       loadRatings(): void {
         patchState(store, { loading: true });
-    
+
         ratingService.loadExpertRatings().subscribe({
           next: (ratings) => {
             patchState(store, { ratings, loading: false });
@@ -52,7 +52,7 @@ export const DessertStore = signalStore(
             patchState(store, { loading: false });
             toastService.show('Error loading ratings!');
             console.error(error);
-          }
+          },
         });
       },
       updateRating(id: number, rating: number): void {
@@ -70,18 +70,20 @@ export const DessertStore = signalStore(
           ),
           debounceTime(300),
           tap(() => patchState(store, { loading: true })),
-          switchMap((f) => dessertService.find(f).pipe(
-            tapResponse({
-              next: (desserts) => {
-                patchState(store, { desserts, loading: false });
-              },
-              error: (error) => {
-                toastService.show('Error loading desserts!');
-                console.error(error);
-                patchState(store, { loading: false })
-              },
-            })
-          )),
+          switchMap((f) =>
+            dessertService.find(f).pipe(
+              tapResponse({
+                next: (desserts) => {
+                  patchState(store, { desserts, loading: false });
+                },
+                error: (error) => {
+                  toastService.show('Error loading desserts!');
+                  console.error(error);
+                  patchState(store, { loading: false });
+                },
+              }),
+            ),
+          ),
         ),
       ),
     }),
