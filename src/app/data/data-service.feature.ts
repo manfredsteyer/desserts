@@ -32,10 +32,6 @@ export function withDataService() {
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
       },
-      async loadDesserts(): Promise<void> {
-        const desserts = await dessertService.findPromise(store.filter());
-        patchState(store, { desserts });
-      },
       loadDessertsByFilter: rxMethod<DessertFilter>(
         pipe(
           filter(
