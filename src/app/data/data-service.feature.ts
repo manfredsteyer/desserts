@@ -1,4 +1,5 @@
 import { ProviderToken, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStoreFeature,
@@ -8,7 +9,6 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, debounceTime, pipe, switchMap, tap } from 'rxjs';
-import { tapResponse } from '@ngrx/operators';
 
 export type DataService<F, E> = {
   findPromise(filter: F): Promise<E[]>;
@@ -26,10 +26,7 @@ export function withDataService<F, E>(
       error: null as unknown,
       entities: [] as E[],
     }),
-    withMethods((
-      store,
-      dataService = inject(dataServiceToken),
-    ) => ({
+    withMethods((store, dataService = inject(dataServiceToken)) => ({
       updateFilter(filter: F): void {
         patchState(store, { filter });
       },
@@ -37,17 +34,19 @@ export function withDataService<F, E>(
         pipe(
           debounceTime(300),
           tap(() => patchState(store, { loading: true })),
-          switchMap((f) => dataService.find(f).pipe(
-            tapResponse({
-              next: (entities) => {
-                patchState(store, { entities, loading: false });
-              },
-              error: (error) => {
-                console.error(error);
-                patchState(store, { error, loading: false })
-              },
-            })
-          )),
+          switchMap((f) =>
+            dataService.find(f).pipe(
+              tapResponse({
+                next: (entities) => {
+                  patchState(store, { entities, loading: false });
+                },
+                error: (error) => {
+                  console.error(error);
+                  patchState(store, { error, loading: false });
+                },
+              }),
+            ),
+          ),
         ),
       ),
     })),

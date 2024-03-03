@@ -6,5 +6,9 @@ import { routes } from './app.routes';
 import { provideAppErrorHandler } from './shared/app-error-handler';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(), provideAppErrorHandler()],
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+    provideAppErrorHandler(),
+  ],
 };
