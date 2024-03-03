@@ -14,7 +14,9 @@
       Expert Ratings
     </button>
 
-    @if(loading()) { <div class="loader"></div> }
+    @if (loading()) {
+      <div class="loader"></div>
+    }
   </div>
 </form>
 
@@ -24,7 +26,7 @@
       [dessert]="dessert"
       (ratingChange)="updateRating(dessert.id, $event)"
     ></app-dessert-card>
-  } 
+  }
   @if (desserts().length === 0 && !loading()) {
     <p class="text-lg">Sorry, no desserts found.</p>
   }
