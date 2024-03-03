@@ -71,17 +71,20 @@ export class DessertsComponent implements OnInit {
   async loadRatings() {
     this.loading.set(true);
 
-    this.#ratingService.loadExpertRatings().pipe(takeUntilDestroyed()).subscribe({
-      next: (ratings) => {
-        this.ratings.set(ratings);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.#toastService.show('Error loading ratings!');
-        console.error(error);
-        this.loading.set(false);
-      }
-    });
+    this.#ratingService
+      .loadExpertRatings()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (ratings) => {
+          this.ratings.set(ratings);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.#toastService.show('Error loading ratings!');
+          console.error(error);
+          this.loading.set(false);
+        },
+      });
   }
 
   updateRating(id: number, rating: number): void {
