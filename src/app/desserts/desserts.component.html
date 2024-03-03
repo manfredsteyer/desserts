@@ -14,7 +14,7 @@
       type="submit"
       (click)="search()"
       class="btn btn-primary"
-      [disabled]="loading()"
+      [disabled]="loading"
     >
       Search
     </button>
@@ -22,19 +22,19 @@
       type="button"
       (click)="loadRatings()"
       class="btn ml-2"
-      [disabled]="loading()"
+      [disabled]="loading"
     >
       Expert Ratings
     </button>
 
-    @if (loading()) {
+    @if (loading) {
       <div class="loader"></div>
     }
   </div>
 </form>
 
 <div class="card-grid">
-  @for (dessert of ratedDesserts(); track dessert.id) {
+  @for (dessert of desserts; track dessert.id) {
     <app-dessert-card
       [dessert]="dessert"
       (ratingChange)="updateRating(dessert.id, $event)"
