@@ -6,12 +6,12 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
+import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
-import { ToastService } from '../shared/toast';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -32,7 +32,7 @@ export const DessertStore = signalStore(
       store,
       dessertService = inject(DessertService),
       ratingService = inject(RatingService),
-      toastService = inject(ToastService)
+      toastService = inject(ToastService),
     ) => ({
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
@@ -48,12 +48,12 @@ export const DessertStore = signalStore(
             patchState(store, { loading: false });
             toastService.show('Error loading desserts!');
             console.error(error);
-          }
+          },
         });
       },
       loadRatings(): void {
         patchState(store, { loading: true });
-    
+
         ratingService.loadExpertRatings().subscribe({
           next: (ratings) => {
             patchState(store, { ratings, loading: false });
@@ -62,7 +62,7 @@ export const DessertStore = signalStore(
             patchState(store, { loading: false });
             toastService.show('Error loading ratings!');
             console.error(error);
-          }
+          },
         });
       },
       updateRating(id: number, rating: number): void {
