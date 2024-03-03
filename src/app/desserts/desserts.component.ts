@@ -57,7 +57,7 @@ export class DessertsComponent implements OnInit {
         this.loading.set(false);
         this.#toastService.show('Error loading desserts!');
         console.error(error);
-      }
+      },
     });
   }
 
@@ -69,7 +69,7 @@ export class DessertsComponent implements OnInit {
 
   async loadRatings() {
     this.loading.set(true);
-    
+
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
         this.ratings.set(ratings);
@@ -79,7 +79,7 @@ export class DessertsComponent implements OnInit {
         this.#toastService.show('Error loading ratings!');
         console.error(error);
         this.loading.set(false);
-      }      
+      },
     });
   }
 
