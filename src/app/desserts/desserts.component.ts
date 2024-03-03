@@ -13,6 +13,7 @@ import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
+import { ToastService } from '../shared/toast';
 
 @Component({
   selector: 'app-desserts',
@@ -25,6 +26,7 @@ import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 export class DessertsComponent implements OnInit {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
+  #toastService = inject(ToastService);
 
   originalName = signal('');
   englishName = signal('');
@@ -44,14 +46,19 @@ export class DessertsComponent implements OnInit {
       englishName: this.englishName(),
     };
 
-    try {
-      this.loading.set(true);
-      const desserts = await this.#dessertService.findPromise(filter);
-      this.desserts.set(desserts);
-    }
-    finally {
-      this.loading.set(false);
-    }
+    this.loading.set(true);
+
+    this.#dessertService.find(filter).subscribe({
+      next: (desserts) => {
+        this.desserts.set(desserts);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this.loading.set(false);
+        this.#toastService.show('Error loading desserts!');
+        console.error(error);
+      }
+    });
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -61,14 +68,19 @@ export class DessertsComponent implements OnInit {
   }
 
   async loadRatings() {
-    try {
-      this.loading.set(true);
-      const ratings = await this.#ratingService.loadExpertRatings();
-      this.ratings.set(ratings);
-    }
-    finally {
-      this.loading.set(false);
-    }
+    this.loading.set(true);
+    
+    this.#ratingService.loadExpertRatings().subscribe({
+      next: (ratings) => {
+        this.ratings.set(ratings);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this.#toastService.show('Error loading ratings!');
+        console.error(error);
+        this.loading.set(false);
+      }      
+    });
   }
 
   updateRating(id: number, rating: number): void {
