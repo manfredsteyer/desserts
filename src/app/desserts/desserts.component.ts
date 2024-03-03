@@ -27,11 +27,11 @@ export class DessertsComponent {
     this.#store.loadDesserts();
   }
 
-  async search() {
+  search() {
     this.#store.loadDesserts();
   }
 
-  async loadRatings() {
+  loadRatings() {
     this.#store.loadRatings();
   }
 

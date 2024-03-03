@@ -11,6 +11,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
+import { ToastService } from '../shared/toast';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -31,29 +32,38 @@ export const DessertStore = signalStore(
       store,
       dessertService = inject(DessertService),
       ratingService = inject(RatingService),
+      toastService = inject(ToastService)
     ) => ({
       updateFilter(filter: DessertFilter): void {
         patchState(store, { filter });
       },
-      async loadDesserts(): Promise<void> {
-        try {
-          patchState(store, { loading: true });
-          const desserts = await dessertService.findPromise(store.filter());
-          patchState(store, { desserts });
-        }
-        finally {
-          patchState(store, { loading: false });
-        }
+      loadDesserts(): void {
+        patchState(store, { loading: true });
+
+        dessertService.find(store.filter()).subscribe({
+          next: (desserts) => {
+            patchState(store, { desserts, loading: false });
+          },
+          error: (error) => {
+            patchState(store, { loading: false });
+            toastService.show('Error loading desserts!');
+            console.error(error);
+          }
+        });
       },
-      async loadRatings(): Promise<void> {
-        try {
-          patchState(store, { loading: true });
-          const ratings = await ratingService.loadExpertRatings();
-          patchState(store, { ratings });
-        }
-        finally {
-          patchState(store, { loading: false });
-        }
+      loadRatings(): void {
+        patchState(store, { loading: true });
+    
+        ratingService.loadExpertRatings().subscribe({
+          next: (ratings) => {
+            patchState(store, { ratings, loading: false });
+          },
+          error: (error) => {
+            patchState(store, { loading: false });
+            toastService.show('Error loading ratings!');
+            console.error(error);
+          }
+        });
       },
       updateRating(id: number, rating: number): void {
         patchState(store, (state) => ({
