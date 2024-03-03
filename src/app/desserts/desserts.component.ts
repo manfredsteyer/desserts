@@ -38,8 +38,7 @@ export class DessertsComponent implements OnInit {
       this.loading = true;
       const desserts = await this.#dessertService.findPromise(filter);
       this.desserts = desserts;
-    }
-    finally {
+    } finally {
       this.loading = false;
     }
     // Remarks: A Global Error Handler displays error
@@ -57,8 +56,7 @@ export class DessertsComponent implements OnInit {
       const ratings = await this.#ratingService.loadExpertRatings();
       const rated = this.toRated(this.desserts, ratings);
       this.desserts = rated;
-    }
-    finally {
+    } finally {
       this.loading = false;
     }
     // Remarks: A Global Error Handler displays error
