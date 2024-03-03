@@ -29,8 +29,6 @@ export class DessertsComponent implements OnInit {
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
 
-  #toastService = inject(ToastService);
-
   originalName = signal('');
   englishName = signal('');
   loading = signal(false);
