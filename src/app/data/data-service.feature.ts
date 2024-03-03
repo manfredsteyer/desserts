@@ -33,10 +33,6 @@ export function withDataService<F, E>(
       updateFilter(filter: F): void {
         patchState(store, { filter });
       },
-      async load(): Promise<void> {
-        const entities = await dataService.findPromise(store.filter());
-        patchState(store, { entities: entities });
-      },
       loadByFilter: rxMethod<F>(
         pipe(
           debounceTime(300),
