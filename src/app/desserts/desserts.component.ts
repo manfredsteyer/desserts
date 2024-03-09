@@ -2,12 +2,12 @@ import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
+  DestroyRef,
   computed,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import {
   catchError,
@@ -32,7 +32,7 @@ import { ToastService } from '../shared/toast';
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DessertsComponent implements OnInit {
+export class DessertsComponent {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
@@ -41,7 +41,6 @@ export class DessertsComponent implements OnInit {
   englishName = signal('Cake');
   loading = signal(false);
 
-  desserts = signal<Dessert[]>([]);
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
@@ -65,24 +64,11 @@ export class DessertsComponent implements OnInit {
       ),
     ),
     tap(() => this.loading.set(false)),
-    takeUntilDestroyed(),
   );
 
-  maxRating = computed(() =>
-    this.desserts().reduce((acc, d) => Math.max(acc, d.rating), 0),
-  );
-
-  async ngOnInit() {
-    this.desserts$.subscribe((desserts) => {
-      // NOTE: For the sake of simplicity, we stick
-      // with a writable Signal for the time being,
-      // while toSignal would lead to a readonly Signal.
-      // We will switch to unidirectional dataflow
-      // and readonly Signals, when we talk about
-      // state management
-      this.desserts.set(desserts);
-    });
-  }
+  desserts = toSignal(this.desserts$, { 
+    initialValue: [] 
+  });
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
     return desserts.map((d) =>
@@ -95,7 +81,6 @@ export class DessertsComponent implements OnInit {
 
     this.#ratingService
       .loadExpertRatings()
-      .pipe(takeUntilDestroyed())
       .subscribe({
         next: (ratings) => {
           this.ratings.set(ratings);
