@@ -23,7 +23,7 @@ export class DessertsComponent {
   ratedDesserts = this.#store.ratedDesserts;
   loading = this.#store.loading;
 
-  loadRatings() {
+  loadRatings(): void {
     this.#store.loadRatings();
   }
 
