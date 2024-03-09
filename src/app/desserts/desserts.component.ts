@@ -27,11 +27,11 @@ export class DessertsComponent {
     this.#store.loadDesserts();
   }
 
-  search() {
+  search(): void {
     this.#store.loadDesserts();
   }
 
-  loadRatings() {
+  loadRatings(): void {
     this.#store.loadRatings();
   }
 
