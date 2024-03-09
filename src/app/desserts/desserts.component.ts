@@ -26,11 +26,11 @@ export class DessertsComponent implements OnInit {
 
   desserts = signal<Dessert[]>([]);
 
-  async ngOnInit() {
+  ngOnInit(): void {
     this.search();
   }
 
-  async search() {
+  search(): void {
     const filter: DessertFilter = {
       originalName: this.originalName(),
       englishName: this.englishName(),
@@ -57,7 +57,7 @@ export class DessertsComponent implements OnInit {
     );
   }
 
-  async loadRatings() {
+  loadRatings(): void {
     this.loading.set(true);
 
     this.#ratingService.loadExpertRatings().subscribe({
