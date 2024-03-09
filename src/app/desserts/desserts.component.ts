@@ -40,7 +40,7 @@ export class DessertsComponent {
     );
   }
 
-  async loadRatings() {
+  loadRatings(): void {
     this.loading.set(true);
 
     this.#ratingService.loadExpertRatings().subscribe({
