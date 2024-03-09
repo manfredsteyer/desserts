@@ -27,14 +27,14 @@
       Expert Ratings
     </button>
 
-    @if (loading) {
+    @if (loading()) {
       <div class="loader"></div>
     }
   </div>
 </form>
 
 <div class="card-grid">
-  @for (dessert of desserts; track dessert.id) {
+  @for (dessert of desserts(); track dessert.id) {
     <app-dessert-card
       [dessert]="dessert"
       (ratingChange)="updateRating(dessert.id, $event)"
