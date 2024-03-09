@@ -2,7 +2,6 @@ import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
   inject,
   signal,
@@ -66,8 +65,8 @@ export class DessertsComponent {
     tap(() => this.loading.set(false)),
   );
 
-  desserts = toSignal(this.desserts$, { 
-    initialValue: [] 
+  desserts = toSignal(this.desserts$, {
+    initialValue: [],
   });
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -79,19 +78,17 @@ export class DessertsComponent {
   async loadRatings() {
     this.loading.set(true);
 
-    this.#ratingService
-      .loadExpertRatings()
-      .subscribe({
-        next: (ratings) => {
-          this.ratings.set(ratings);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          this.#toastService.show('Error loading ratings!');
-          console.error(error);
-          this.loading.set(false);
-        },
-      });
+    this.#ratingService.loadExpertRatings().subscribe({
+      next: (ratings) => {
+        this.ratings.set(ratings);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this.#toastService.show('Error loading ratings!');
+        console.error(error);
+        this.loading.set(false);
+      },
+    });
   }
 
   updateRating(id: number, rating: number): void {
