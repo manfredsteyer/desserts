@@ -2,14 +2,12 @@ import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
-import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -23,7 +21,7 @@ import { ToastService } from '../shared/toast';
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DessertsComponent implements OnInit {
+export class DessertsComponent {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
@@ -35,31 +33,6 @@ export class DessertsComponent implements OnInit {
   desserts = signal<Dessert[]>([]);
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
-
-  async ngOnInit() {
-    this.search();
-  }
-
-  async search() {
-    const filter: DessertFilter = {
-      originalName: this.originalName(),
-      englishName: this.englishName(),
-    };
-
-    this.loading.set(true);
-
-    this.#dessertService.find(filter).subscribe({
-      next: (desserts) => {
-        this.desserts.set(desserts);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.loading.set(false);
-        this.#toastService.show('Error loading desserts!');
-        console.error(error);
-      },
-    });
-  }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
     return desserts.map((d) =>
