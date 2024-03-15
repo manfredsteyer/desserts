@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   effect,
   input,
+  output,
 } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
@@ -22,8 +21,7 @@ export class DessertCardComponent {
   dessert = input.required<Dessert>();
   blink = injectCdBlink();
 
-  @Output()
-  ratingChange = new EventEmitter<number>();
+  ratingChange = output<number>();
 
   constructor() {
     effect(() => {
