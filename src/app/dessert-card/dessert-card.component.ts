@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 import { injectCdBlink } from '../shared/inject-cd-blink';
@@ -15,8 +15,7 @@ export class DessertCardComponent {
   dessert = input.required<Dessert>();
   blink = injectCdBlink();
 
-  @Output()
-  ratingChange = new EventEmitter<number>();
+  ratingChange = output<number>();
 
   updateRating(newRating: number): void {
     this.ratingChange.emit(newRating);
