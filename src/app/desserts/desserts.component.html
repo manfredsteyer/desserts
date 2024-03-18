@@ -14,7 +14,7 @@
       type="submit"
       (click)="search()"
       class="btn btn-primary"
-      [disabled]="loading"
+      [disabled]="loading()"
     >
       Search
     </button>
@@ -22,7 +22,7 @@
       type="button"
       (click)="loadRatings()"
       class="btn ml-2"
-      [disabled]="loading"
+      [disabled]="loading()"
     >
       Expert Ratings
     </button>
