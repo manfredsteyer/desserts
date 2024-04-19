@@ -32,13 +32,13 @@ export class DessertService {
     return lastValueFrom(this.find(filter));
   }
 
-  findById(id: number): Observable<Dessert[]> {
+  findById(id: number): Observable<Dessert> {
     return this.#http
       .get<Dessert[]>(dataFile)
-      .pipe(map((result) => result.filter((d) => d.id == id)));
+      .pipe(map((result) => result.filter((d) => d.id === id)[0]));
   }
 
-  findPromiseById(id: number): Promise<Dessert[]> {
+  findPromiseById(id: number): Promise<Dessert> {
     return lastValueFrom(this.findById(id));
   }
 }

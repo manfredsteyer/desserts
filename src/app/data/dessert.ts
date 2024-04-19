@@ -7,3 +7,13 @@ export type Dessert = {
   rating: number;
   image: string;
 };
+
+export const initDessert: Dessert = {
+  id: 0,
+  originalName: '',
+  englishName: '',
+  description: '',
+  kcal: 0,
+  rating: 0,
+  image: ''
+}

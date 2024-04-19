@@ -1,0 +1,9 @@
+@if (loading()) {
+<div class="loader"></div>
+}
+@else {
+<pre>{{ dessert() | json }}</pre>
+<button type="button" [routerLink]="['..', id() + 1]" class="btn">
+    Next
+</button>
+}
