@@ -5,6 +5,7 @@ import { DessertDetailStore } from '../data/dessert-detail.story';
 import { explicitEffect } from '../shared/explicit-effect';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dessert-detail',
@@ -31,9 +32,9 @@ export class DessertDetailComponent implements OnChanges {
   }
 
   // Option 2
-  constructor() {
-    this.store.rxLoad(this.id);
-  }
+  // constructor() {
+  //   this.store.rxLoad(this.id);
+  // }
 
   // Option 3 - error demonstration
   // constructor() {
