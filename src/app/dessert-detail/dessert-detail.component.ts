@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component, OnChanges, inject, input, numberAttribute } from '@angular/core';
-import { DessertDetailStore } from '../data/dessert-detail.story';
+import { DessertDetailStore } from '../data/dessert-detail.store';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
