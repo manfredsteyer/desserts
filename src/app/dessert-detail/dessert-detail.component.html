@@ -1,9 +1,38 @@
 @if (loading()) {
-<div class="loader"></div>
-}
-@else {
-<pre>{{ dessert() | json }}</pre>
-<button type="button" [routerLink]="['..', id() + 1]" class="btn">
+  <div class="loader"></div>
+} @else {
+  <form [formGroup]="formGroup">
+    <div>
+      <label for="englishName"> English Name </label>
+      <input name="englishName" formControlName="englishName" />
+    </div>
+    <div>
+      <label for="originalName"> originalName </label>
+      <input name="originalName" formControlName="originalName" />
+    </div>
+    <div>
+      <label for="kcal"> kcal </label>
+      <input formControlName="kcal" />
+    </div>
+    <div>
+      <label for="">
+        <select formControlName="category">
+          <option></option>
+          @for (cat of categories(); track cat) {
+            <option>{{ cat }}</option>
+          }
+        </select>
+        <select formControlName="subCategory">
+          <option></option>
+          @for (subCat of subCategories(); track subCat) {
+            <option>{{ subCat }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <button type="button" [routerLink]="['..', id() + 1]" class="btn">
     Next
-</button>
+  </button>
 }

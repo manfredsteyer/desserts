@@ -41,4 +41,17 @@ export class DessertService {
   findPromiseById(id: number): Promise<Dessert> {
     return lastValueFrom(this.findById(id));
   }
+
+  findCategories(): string[] {
+    return ['Austrian', 'Italien'];
+  }
+
+  findSubCategories(category: string): string[] {
+    if (category === 'Austrian') {
+      return ['Ice Cream', 'Cakes'];
+    }
+    else {
+      return ['Gelati', 'Torta'];
+    }
+  }
 }

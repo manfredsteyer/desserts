@@ -1,4 +1,4 @@
-import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
+import { patchState, signalStore, withHooks, withMethods, withState } from "@ngrx/signals";
 import { initDessert } from "./dessert";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { pipe, switchMap, tap } from "rxjs";
@@ -9,7 +9,10 @@ export const DessertDetailStore = signalStore(
     { providedIn: 'root' },
     withState({
         dessert: initDessert,
-        loading: false
+        loading: false,
+        category: '',
+        categories: [] as string[],
+        subCategories: [] as string[],
     }),
     withMethods((
         store,
@@ -21,12 +24,28 @@ export const DessertDetailStore = signalStore(
             tap((dessert) => patchState(store, { dessert, loading: false })),
         )),
 
+        loadCategories(): void {
+            patchState(store, { loading: true });
+            const categories = dessertService.findCategories();
+            patchState(store, { categories, loading: false });
+        },
+
+        loadSubCategories(category: string): void {
+            patchState(store, { category, loading: true });
+            const subCategories = dessertService.findSubCategories(category);
+            patchState(store, { subCategories, loading: false });
+        },
+
         load(id: number): void {
             patchState(store, { loading: true });
             dessertService.findById(id).subscribe(dessert => {
                 patchState(store, { dessert, loading: false });
             });
         }
-
-    }))
+    })),
+    withHooks({
+        onInit(store) {
+            store.loadCategories();
+        }
+    })
 );
