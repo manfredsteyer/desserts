@@ -6,3 +6,7 @@ form div {
 form div input {
     font-weight: normal;
 }
+
+button {
+    margin-right: 10px;
+}
