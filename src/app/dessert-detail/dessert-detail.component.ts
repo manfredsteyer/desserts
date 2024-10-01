@@ -25,25 +25,16 @@ export class DessertDetailComponent implements OnChanges {
     originalName: [''],
     description: [''],
     kcal: [0],
-    category: [''],
-    subCategory: [''],
   });
 
   dessert = this.store.dessert;
   loading = this.store.loading;
 
-  categories = this.store.categories;
-  subCategories = this.store.subCategories;
-  
   id = input.required({
     transform: numberAttribute
   });
 
   constructor() {
-    this.formGroup.controls.category.valueChanges.subscribe((cat) => {
-      this.store.loadSubCategories(cat);
-    });
-
     effect(() => {
       this.formGroup.patchValue(this.dessert());
     });
