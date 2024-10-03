@@ -5,6 +5,11 @@ import { pipe, switchMap, tap } from "rxjs";
 import { inject } from "@angular/core";
 import { DessertService } from "./dessert.service";
 
+export class C {
+    a: string = '';
+    b: string = '';
+}
+
 export const DessertDetailStore = signalStore(
     { providedIn: 'root' },
     withState({
@@ -13,6 +18,12 @@ export const DessertDetailStore = signalStore(
         category: '',
         categories: [] as string[],
         subCategories: [] as string[],
+    }),
+    withState({
+        c: {
+            a: 'init',
+            b: 'init'
+        }
     }),
     withMethods((
         store,
