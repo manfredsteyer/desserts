@@ -20,10 +20,7 @@ export const DessertDetailStore = signalStore(
         subCategories: [] as string[],
     }),
     withState({
-        c: {
-            a: 'init',
-            b: 'init'
-        }
+        c: new C()
     }),
     withMethods((
         store,
