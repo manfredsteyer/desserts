@@ -7,6 +7,8 @@ import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
+import { resource } from '../shared/resource/resource';
+import { debounce, timeout } from '../shared/wait';
 
 @Component({
   selector: 'app-desserts',
@@ -22,9 +24,26 @@ export class DessertsComponent implements OnInit {
 
   originalName = signal('');
   englishName = signal('');
-  loading = signal(false);
+  // loading = signal(false);
+  // desserts = signal<Dessert[]>([]);
+  loadingRatings = signal(false);
 
-  desserts = signal<Dessert[]>([]);
+  dessertsCriteria = computed(() => ({
+    originalName: this.originalName(),
+    englishName: this.englishName(),
+  }));
+
+  dessertsResource = resource({
+    request: this.dessertsCriteria,
+    loader: (param) => {
+      return this.#dessertService.findPromise(param.request, param.abortSignal);
+    }
+  });
+
+  desserts = computed(() => this.dessertsResource.value() ?? []);
+  loading = computed(() => this.dessertsResource.isLoading());
+  error = this.dessertsResource.error;
+
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
@@ -33,24 +52,6 @@ export class DessertsComponent implements OnInit {
   }
 
   search(): void {
-    const filter: DessertFilter = {
-      originalName: this.originalName(),
-      englishName: this.englishName(),
-    };
-
-    this.loading.set(true);
-
-    this.#dessertService.find(filter).subscribe({
-      next: (desserts) => {
-        this.desserts.set(desserts);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.loading.set(false);
-        this.#toastService.show('Error loading desserts!');
-        console.error(error);
-      },
-    });
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
@@ -60,17 +61,17 @@ export class DessertsComponent implements OnInit {
   }
 
   loadRatings(): void {
-    this.loading.set(true);
+    this.loadingRatings.set(true);
 
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
         this.ratings.set(ratings);
-        this.loading.set(false);
+        this.loadingRatings.set(false);
       },
       error: (error) => {
         this.#toastService.show('Error loading ratings!');
         console.error(error);
-        this.loading.set(false);
+        this.loadingRatings.set(false);
       },
     });
   }

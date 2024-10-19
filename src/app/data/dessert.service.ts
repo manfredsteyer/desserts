@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, lastValueFrom, map } from 'rxjs';
+import { Observable, delay, lastValueFrom, map } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
+import { toPromise } from '../shared/to-promise';
 
 const dataFile = '/assets/desserts.json';
 
@@ -28,8 +29,8 @@ export class DessertService {
       );
   }
 
-  findPromise(filter: DessertFilter): Promise<Dessert[]> {
-    return lastValueFrom(this.find(filter));
+  findPromise(filter: DessertFilter, abortSignal: AbortSignal): Promise<Dessert[]> {
+    return toPromise(this.find(filter), abortSignal);
   }
 
   findById(id: number): Observable<Dessert[]> {
