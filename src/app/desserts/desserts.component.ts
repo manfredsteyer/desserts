@@ -6,10 +6,11 @@ import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
-import { resource } from '../shared/resource/resource';
-import { debounce, skipInitial } from '../shared/resource-utils';
+import { debounceTrue, rxSkipInitial } from '../shared/resource-utils';
 import { linkedSignal } from '../shared/linked/linked';
 import { getErrorMessage } from '../shared/get-error-message';
+import { rxResource } from '../shared/resource/rx-resource';
+import { switchMap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-desserts',
@@ -31,25 +32,25 @@ export class DessertsComponent {
     englishName: this.englishName(),
   }));
 
-  dessertsResource = resource({
+  dessertsResource = rxResource({
     request: this.dessertsCriteria,
-    loader: debounce((param) => {
-      return this.#dessertService.findPromise(param.request, param.abortSignal);
-    })
+    loader: (param) => {
+      return timer(300).pipe(switchMap(() => this.#dessertService.find(param.request)));
+    }
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
 
-  ratingsResource = resource({
-    loader: skipInitial(() => {
-      return this.#ratingService.loadExpertRatingsPromise();
+  ratingsResource = rxResource({
+    loader: rxSkipInitial(() => {
+      return this.#ratingService.loadExpertRatings()
     })
   });
 
   ratings = linkedSignal(() => this.ratingsResource.value() ?? {});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
-  loading = computed(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading());
+  loading = debounceTrue(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading(), 500);
   error = computed(() => getErrorMessage(this.dessertsResource.error() || this.ratingsResource.error()));
 
   constructor() {
@@ -58,7 +59,7 @@ export class DessertsComponent {
       if (error) {
         this.#toastService.show('Error: ' + error);
       }
-    })
+    });
   }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
