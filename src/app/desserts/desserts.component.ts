@@ -1,14 +1,15 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
-import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
 import { resource } from '../shared/resource/resource';
-import { debounce, timeout } from '../shared/wait';
+import { debounce, skipInitial } from '../shared/resource-utils';
+import { linkedSignal } from '../shared/linked/linked';
+import { getErrorMessage } from '../shared/get-error-message';
 
 @Component({
   selector: 'app-desserts',
@@ -24,9 +25,6 @@ export class DessertsComponent {
 
   originalName = signal('');
   englishName = signal('');
-  // loading = signal(false);
-  // desserts = signal<Dessert[]>([]);
-  loadingRatings = signal(false);
 
   dessertsCriteria = computed(() => ({
     originalName: this.originalName(),
@@ -41,11 +39,27 @@ export class DessertsComponent {
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
-  loading = computed(() => this.dessertsResource.isLoading());
-  error = this.dessertsResource.error;
 
-  ratings = signal<DessertIdToRatingMap>({});
+  ratingsResource = resource({
+    loader: skipInitial(() => {
+      return this.#ratingService.loadExpertRatingsPromise();
+    })
+  });
+
+  ratings = linkedSignal(() => this.ratingsResource.value() ?? {});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
+
+  loading = computed(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading());
+  error = computed(() => getErrorMessage(this.dessertsResource.error() || this.ratingsResource.error()));
+
+  constructor() {
+    effect(() => {
+      const error = this.error();
+      if (error) {
+        this.#toastService.show('Error: ' + error);
+      }
+    })
+  }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
     return desserts.map((d) =>
@@ -54,19 +68,7 @@ export class DessertsComponent {
   }
 
   loadRatings(): void {
-    this.loadingRatings.set(true);
-
-    this.#ratingService.loadExpertRatings().subscribe({
-      next: (ratings) => {
-        this.ratings.set(ratings);
-        this.loadingRatings.set(false);
-      },
-      error: (error) => {
-        this.#toastService.show('Error loading ratings!');
-        console.error(error);
-        this.loadingRatings.set(false);
-      },
-    });
+    this.ratingsResource.refresh();
   }
 
   updateRating(id: number, rating: number): void {
