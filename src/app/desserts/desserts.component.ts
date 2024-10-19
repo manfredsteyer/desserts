@@ -17,7 +17,7 @@ import { debounce, timeout } from '../shared/wait';
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
 })
-export class DessertsComponent implements OnInit {
+export class DessertsComponent {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
@@ -46,13 +46,6 @@ export class DessertsComponent implements OnInit {
 
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
-
-  ngOnInit(): void {
-    this.search();
-  }
-
-  search(): void {
-  }
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
     return desserts.map((d) =>
