@@ -35,9 +35,9 @@ export class DessertsComponent implements OnInit {
 
   dessertsResource = resource({
     request: this.dessertsCriteria,
-    loader: (param) => {
+    loader: debounce((param) => {
       return this.#dessertService.findPromise(param.request, param.abortSignal);
-    }
+    })
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
