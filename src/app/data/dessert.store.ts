@@ -1,98 +1,71 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { ToastService } from '../shared/toast';
-import { Dessert } from './dessert';
-import { DessertFilter } from './dessert-filter';
-import { DessertService } from './dessert.service';
-import { DessertIdToRatingMap, RatingService } from './rating.service';
-import { toRated } from './to-rated';
+import { Injectable, inject, signal, computed, effect } from "@angular/core";
+import { timer, switchMap } from "rxjs";
+import { linkedSignal } from "../shared/linked/linked";
+import { rxSkipInitial, debounceTrue } from "../shared/resource-utils";
+import { rxResource } from "../shared/resource/rx-resource";
+import { ToastService } from "../shared/toast";
+import { Dessert } from "./dessert";
+import { DessertService } from "./dessert.service";
+import { RatingService, DessertIdToRatingMap } from "./rating.service";
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
   #dessertService = inject(DessertService);
-
-  // When working with lightweight stores
-  // rating could be put in a store of itself.
   #ratingService = inject(RatingService);
-
   #toastService = inject(ToastService);
 
-  #state = signal({
-    filter: {
-      originalName: '',
-      englishName: '',
-    },
-    loading: false,
-    ratings: {} as DessertIdToRatingMap,
-    desserts: [] as Dessert[],
+  originalName = signal('');
+  englishName = signal('');
+
+  dessertsCriteria = computed(() => ({
+    originalName: this.originalName(),
+    englishName: this.englishName(),
+  }));
+
+  dessertsResource = rxResource({
+    request: this.dessertsCriteria,
+    loader: (param) => {
+      return timer(300).pipe(switchMap(() => this.#dessertService.find(param.request)));
+    }
   });
 
-  readonly originalName = computed(() => this.#state().filter.originalName);
-  readonly englishName = computed(() => this.#state().filter.englishName);
+  desserts = computed(() => this.dessertsResource.value() ?? []);
 
-  readonly desserts = computed(() => this.#state().desserts);
-  readonly ratings = computed(() => this.#state().ratings);
+  ratingsResource = rxResource({
+    loader: rxSkipInitial(() => {
+      return this.#ratingService.loadExpertRatings()
+    })
+  });
 
-  readonly loading = computed(() => this.#state().loading);
+  ratings = linkedSignal(() => this.ratingsResource.value() ?? {});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
-  readonly ratedDesserts = computed(() =>
-    toRated(this.desserts(), this.ratings()),
-  );
+  loading = debounceTrue(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading(), 500);
+  error = computed(() => getErrorMessage(this.dessertsResource.error() || this.ratingsResource.error()));
 
-  updateFilter(filter: DessertFilter): void {
-    this.#state.update((state) => ({ ...state, filter }));
+  constructor() {
+    effect(() => {
+      const error = this.error();
+      if (error) {
+        this.#toastService.show('Error: ' + error);
+      }
+    });
   }
 
-  loadDesserts(): void {
-    this.#state.update((state) => ({ ...state, loading: true }));
-
-    this.#dessertService.find(this.#state().filter).subscribe({
-      next: (desserts) => {
-        this.#state.update((state) => ({
-          ...state,
-          desserts,
-          loading: false,
-        }));
-      },
-      error: (error) => {
-        this.#state.update((state) => ({
-          ...state,
-          loading: false,
-        }));
-        this.#toastService.show('Error loading desserts!');
-        console.error(error);
-      },
-    });
+  toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
+    return desserts.map((d) =>
+      ratings[d.id] ? { ...d, rating: ratings[d.id] } : d,
+    );
   }
 
   loadRatings(): void {
-    this.#state.update((state) => ({ ...state, loading: true }));
-
-    this.#ratingService.loadExpertRatings().subscribe({
-      next: (ratings) => {
-        this.#state.update((state) => ({
-          ...state,
-          ratings,
-          loading: false,
-        }));
-      },
-      error: (error) => {
-        this.#toastService.show('Error loading ratings!');
-        console.error(error);
-        this.#state.update((state) => ({
-          ...state,
-          loading: false,
-        }));
-      },
-    });
+    this.ratingsResource.refresh();
   }
 
   updateRating(id: number, rating: number): void {
-    this.#state.update((state) => ({
-      ...state,
-      ratings: {
-        ...state.ratings,
-        [id]: rating,
-      },
+    this.ratings.update((ratings) => ({
+      ...ratings,
+      [id]: rating,
     }));
   }
 }
