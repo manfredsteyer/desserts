@@ -29,8 +29,8 @@ export class DessertService {
       );
   }
 
-  findPromise(filter: DessertFilter): Promise<Dessert[]> {
-    return lastValueFrom(this.find(filter));
+  findPromise(filter: DessertFilter, abortSignal: AbortSignal): Promise<Dessert[]> {
+    return toPromise(this.find(filter), abortSignal);
   }
 
   findById(id: number): Observable<Dessert | undefined> {
