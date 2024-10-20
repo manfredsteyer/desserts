@@ -1,12 +1,11 @@
 import { Injectable, inject, signal, computed } from "@angular/core";
-import { timer, switchMap } from "rxjs";
-import { rxSkipInitial, debounceTrue } from "../shared/resource-utils";
-import { rxResource } from "../shared/resource/rx-resource";
+import { debounceTrue, debounce, skipInitial } from "../shared/resource-utils";
 import { Dessert } from "./dessert";
 import { DessertService } from "./dessert.service";
 import { RatingService, DessertIdToRatingMap } from "./rating.service";
 import { getErrorMessage } from "../shared/get-error-message";
 import { DessertFilter } from "./dessert-filter";
+import { resource } from "../shared/resource/resource";
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
@@ -21,16 +20,16 @@ export class DessertStore {
     englishName: this.englishName(),
   }));
 
-  #dessertsResource = rxResource({
+  #dessertsResource = resource({
     request: this.#dessertsCriteria,
-    loader: (param) => {
-      return timer(300).pipe(switchMap(() => this.#dessertService.find(param.request)));
-    }
+    loader: debounce((param) => {
+      return this.#dessertService.findPromise(param.request, param.abortSignal);
+    })
   });
 
-  #ratingsResource = rxResource({
-    loader: rxSkipInitial(() => {
-      return this.#ratingService.loadExpertRatings()
+  #ratingsResource = resource({
+    loader: skipInitial(() => {
+      return this.#ratingService.loadExpertRatingsPromise();
     })
   });
 
