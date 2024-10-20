@@ -1,11 +1,9 @@
-/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, OnChanges, computed, effect, inject, input, numberAttribute, signal } from '@angular/core';
+import { Component, OnChanges, inject, input, numberAttribute } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DessertDetailStore } from '../data/dessert-detail.store';
-import { linkedSignal } from '../shared/linked/linked';
 import { FormsModule } from '@angular/forms';
+import { deepLink, flatten } from '../shared/linked-utils';
 
 @Component({
   selector: 'app-dessert-detail',
@@ -25,11 +23,7 @@ export class DessertDetailComponent implements OnChanges {
   loading = this.store.loading;
   error = this.store.error;
 
-  dessert = {
-    originalName: linkedSignal(() => this.loadedDessert().originalName),
-    englishName: linkedSignal(() => this.loadedDessert().englishName),
-    kcal: linkedSignal(() => this.loadedDessert().kcal)
-  };
+  dessert = deepLink(this.loadedDessert);
 
   ngOnChanges(): void {
     const id = this.id();
@@ -37,17 +31,7 @@ export class DessertDetailComponent implements OnChanges {
   }
 
   save(): void {
-    const patch = {
-      originalName: this.dessert.originalName(),
-      englishName: this.dessert.englishName(),
-      kcal: this.dessert.kcal(),
-    }
-
-    const dessert = {
-      ...this.loadedDessert(),
-      ...patch
-    };
-
+    const dessert = flatten(this.dessert);
     this.store.save(dessert);
   }
 
