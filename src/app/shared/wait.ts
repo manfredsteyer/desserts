@@ -1,6 +1,6 @@
 import { ResourceLoaderParams } from "./resource/api";
 
-export function timeout(
+export function wait(
   msec: number,
   signal: AbortSignal | undefined = undefined,
 ) {
@@ -24,8 +24,8 @@ export type Action<T, U> = (parm: ResourceLoaderParams<T>) => Promise<U>;
 
 export function debounce<T, U>(action: Action<T, U>, time = 300): Action<T, U> {
     return async (param) => {
-        await timeout(time, param.abortSignal);
-        return action(param);
+        await wait(time, param.abortSignal);
+        return await action(param);
     };
 }
 

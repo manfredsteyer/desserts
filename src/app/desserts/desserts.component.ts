@@ -8,7 +8,7 @@ import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
 import { resource } from '../shared/resource/resource';
-import { debounce, timeout } from '../shared/wait';
+import { debounce, wait } from '../shared/wait';
 
 @Component({
   selector: 'app-desserts',
@@ -35,9 +35,10 @@ export class DessertsComponent {
 
   dessertsResource = resource({
     request: this.dessertsCriteria,
-    loader: debounce((param) => {
-      return this.#dessertService.findPromise(param.request, param.abortSignal);
-    })
+    loader: async (param) => {
+      await wait(300, param.abortSignal);
+      return await this.#dessertService.findPromise(param.request, param.abortSignal);
+    }
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
