@@ -1,23 +1,15 @@
-<form (appUpdate)="updateFilter($event)">
+<form>
   <div class="card-grid">
     <div>
       <label for="name">Original Name</label>
-      <input [ngModel]="originalName()" name="originalName" type="text" />
+      <input [(ngModel)]="originalName" name="originalName" type="text" />
     </div>
     <div>
       <label for="englishName">English Name</label>
-      <input [ngModel]="englishName()" name="englishName" />
+      <input [(ngModel)]="englishName" name="englishName" />
     </div>
   </div>
   <div class="mt-10 mb-10">
-    <button
-      type="submit"
-      (click)="search()"
-      class="btn btn-primary"
-      [disabled]="loading()"
-    >
-      Search
-    </button>
     <button
       type="button"
       (click)="loadRatings()"

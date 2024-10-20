@@ -9,6 +9,6 @@ export class FormUpdateDirective {
   appUpdate = new EventEmitter();
 
   constructor() {
-    this.ngForm.valueChanges?.subscribe((value) => this.appUpdate.emit(value));
+    this.ngForm.valueChanges?.subscribe((value) => setTimeout(() => this.appUpdate.emit(value)));
   }
 }

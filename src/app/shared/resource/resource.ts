@@ -1,8 +1,29 @@
 // Taken from: https://github.com/angular/angular/blob/c611cd227045134553748df384c1458019882642/packages/core/src/resource/resource.ts
 
-import { assertInInjectionContext, WritableSignal, signal, ValueEqualityFn, untracked, Signal, EffectRef, Injector, inject, computed, effect, DestroyRef, ExperimentalPendingTasks } from "@angular/core";
-import { SIGNAL, SignalNode } from "@angular/core/primitives/signals";
-import { ResourceOptions, ResourceRef, WritableResource, ResourceStatus, Resource, ResourceLoader } from "./api";
+import {
+  DestroyRef,
+  EffectRef,
+  ExperimentalPendingTasks,
+  Injector,
+  Signal,
+  ValueEqualityFn,
+  WritableSignal,
+  assertInInjectionContext,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
+import { SIGNAL, SignalNode } from '@angular/core/primitives/signals';
+import {
+  Resource,
+  ResourceLoader,
+  ResourceOptions,
+  ResourceRef,
+  ResourceStatus,
+  WritableResource,
+} from './api';
 
 /**
  * @license
@@ -11,7 +32,6 @@ import { ResourceOptions, ResourceRef, WritableResource, ResourceStatus, Resourc
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-
 
 /**
  * Constructs a `Resource` that projects a reactive request to an asynchronous operation defined by
@@ -26,7 +46,12 @@ import { ResourceOptions, ResourceRef, WritableResource, ResourceStatus, Resourc
 export function resource<T, R>(options: ResourceOptions<T, R>): ResourceRef<T> {
   options?.injector || assertInInjectionContext(resource);
   const request = (options.request ?? (() => null)) as () => R;
-  return new WritableResourceImpl<T, R>(request, options.loader, options.equal, options.injector);
+  return new WritableResourceImpl<T, R>(
+    request,
+    options.loader,
+    options.equal,
+    options.injector,
+  );
 }
 
 /**
@@ -77,7 +102,7 @@ abstract class BaseWritableResource<T> implements WritableResource<T> {
     return this.status() === 'loading' || this.status() === 'refreshing';
   }
 
-  hasValue(): this is WritableResource<T> & {value: WritableSignal<T>} {
+  hasValue(): this is WritableResource<T> & { value: WritableSignal<T> } {
     return this.status() === 'resolved' || this.status() === 'local';
   }
 
@@ -88,7 +113,10 @@ abstract class BaseWritableResource<T> implements WritableResource<T> {
   /**
    * Put the resource in a state with a given value.
    */
-  protected setValueState(status: ResourceStatus, value: T | undefined = undefined): void {
+  protected setValueState(
+    status: ResourceStatus,
+    value: T | undefined = undefined,
+  ): void {
     this.status.set(status);
     this.rawSetValue(value);
     this.error.set(undefined);
@@ -113,8 +141,14 @@ abstract class BaseWritableResource<T> implements WritableResource<T> {
   public abstract refresh(): boolean;
 }
 
-class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements ResourceRef<T> {
-  private readonly request: Signal<{request: R; refresh: WritableSignal<number>}>;
+class WritableResourceImpl<T, R>
+  extends BaseWritableResource<T>
+  implements ResourceRef<T>
+{
+  private readonly request: Signal<{
+    request: R;
+    refresh: WritableSignal<number>;
+  }>;
   private readonly pendingTasks: ExperimentalPendingTasks;
   private readonly effectRef: EffectRef;
 
@@ -141,7 +175,11 @@ class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements Reso
     }));
 
     // The actual data-fetching effect.
-    this.effectRef = effect(this.loadEffect.bind(this), {injector, manualCleanup: true});
+    this.effectRef = effect(this.loadEffect.bind(this), {
+      injector,
+      manualCleanup: true,
+      allowSignalWrites: true,
+    });
 
     // Cancel any pending request when the resource itself is destroyed.
     injector.get(DestroyRef).onDestroy(() => this.destroy());
@@ -192,9 +230,11 @@ class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements Reso
     // After the loading operation is cancelled, `this.resolvePendingTask` no longer represents this
     // particular task, but this `await` may eventually resolve/reject. Thus, when we cancel in
     // response to (1) below, we need to cancel the locally saved task.
-    const resolvePendingTask = (this.resolvePendingTask = this.pendingTasks.add());
+    const resolvePendingTask = (this.resolvePendingTask =
+      this.pendingTasks.add());
 
-    const {signal: abortSignal} = (this.pendingController = new AbortController());
+    const { signal: abortSignal } = (this.pendingController =
+      new AbortController());
     try {
       // The actual loading is run through `untracked` - only the request side of `resource` is
       // reactive. This avoids any confusion with signals tracking or not tracking depending on
@@ -244,6 +284,8 @@ class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements Reso
 /**
  * Wraps an equality function to handle either value being `undefined`.
  */
-function wrapEqualityFn<T>(equal: ValueEqualityFn<T>): ValueEqualityFn<T | undefined> {
+function wrapEqualityFn<T>(
+  equal: ValueEqualityFn<T>,
+): ValueEqualityFn<T | undefined> {
   return (a, b) => (a === undefined || b === undefined ? a === b : equal(a, b));
 }
