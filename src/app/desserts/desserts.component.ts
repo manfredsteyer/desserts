@@ -7,7 +7,7 @@ import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
 import { resource } from '../shared/resource/resource';
-import { debounce, skipInitial } from '../shared/resource-utils';
+import { debounce, debounceTrue } from '../shared/resource-utils';
 import { linkedSignal } from '../shared/linked/linked';
 import { getErrorMessage } from '../shared/get-error-message';
 
@@ -19,6 +19,7 @@ import { getErrorMessage } from '../shared/get-error-message';
   styleUrl: './desserts.component.css',
 })
 export class DessertsComponent {
+
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
@@ -41,15 +42,18 @@ export class DessertsComponent {
   desserts = computed(() => this.dessertsResource.value() ?? []);
 
   ratingsResource = resource({
-    loader: skipInitial(() => {
+    loader: (param) => {
+      if (param.previous.status === 'idle') {
+        return Promise.resolve(undefined);
+      }
       return this.#ratingService.loadExpertRatingsPromise();
-    })
+    }
   });
 
   ratings = linkedSignal(() => this.ratingsResource.value() ?? {});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
+  loading = debounceTrue(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading(), 500);
 
-  loading = computed(() => this.ratingsResource.isLoading() || this.dessertsResource.isLoading());
   error = computed(() => getErrorMessage(this.dessertsResource.error() || this.ratingsResource.error()));
 
   constructor() {
@@ -78,3 +82,4 @@ export class DessertsComponent {
     }));
   }
 }
+
