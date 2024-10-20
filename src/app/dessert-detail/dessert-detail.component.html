@@ -1,0 +1,32 @@
+@if (loading()) {
+  <div class="loader"></div>
+} @else {
+  <form>
+    <div>
+      <label for="englishName"> English Name </label>
+      <input name="englishName" [(ngModel)]="dessert.englishName" />
+    </div>
+    <div>
+      <label for="originalName"> OriginalName </label>
+      <input name="originalName" [(ngModel)]="dessert.originalName" />
+    </div>
+    <div>
+      <label for="kcal"> kcal </label>
+      <input name="kcal" [(ngModel)]="dessert.kcal" />
+    </div>
+  </form>
+
+  <div>
+    <button class="btn mr20" (click)="save()">
+      Save
+    </button>
+
+    <button type="button" [routerLink]="['..', id() - 1]" class="btn mr10">
+      Prev
+    </button>
+
+    <button type="button" [routerLink]="['..', id() + 1]" class="btn">
+      Next
+    </button>
+  </div>
+}

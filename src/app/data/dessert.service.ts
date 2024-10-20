@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, lastValueFrom, map } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
+import { toPromise } from '../shared/to-promise';
 
 const dataFile = '/assets/desserts.json';
 
@@ -32,13 +33,13 @@ export class DessertService {
     return lastValueFrom(this.find(filter));
   }
 
-  findById(id: number): Observable<Dessert[]> {
+  findById(id: number): Observable<Dessert | undefined> {
     return this.#http
       .get<Dessert[]>(dataFile)
-      .pipe(map((result) => result.filter((d) => d.id == id)));
+      .pipe(map((result) => result.find((d) => d.id == id)));
   }
 
-  findPromiseById(id: number): Promise<Dessert[]> {
-    return lastValueFrom(this.findById(id));
+  findPromiseById(id: number, abortSignal?: AbortSignal): Promise<Dessert | undefined> {
+    return toPromise(this.findById(id), abortSignal);
   }
 }
