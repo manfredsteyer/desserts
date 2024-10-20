@@ -4,10 +4,7 @@ import { Component, OnChanges, effect, inject, input, numberAttribute, signal } 
 import { DessertDetailStore } from '../data/dessert-detail.store';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Dessert } from '../data/dessert';
-import { DessertService } from '../data/dessert.service';
 
 @Component({
   selector: 'app-dessert-detail',
