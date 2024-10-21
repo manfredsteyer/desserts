@@ -1,14 +1,13 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
-import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
 import { resource } from '../shared/resource/resource';
-import { debounce, wait } from '../shared/wait';
+import { wait } from '../shared/wait';
 
 @Component({
   selector: 'app-desserts',
@@ -24,9 +23,6 @@ export class DessertsComponent {
 
   originalName = signal('');
   englishName = signal('');
-  // loading = signal(false);
-  // desserts = signal<Dessert[]>([]);
-  loadingRatings = signal(false);
 
   dessertsCriteria = computed(() => ({
     originalName: this.originalName(),
@@ -42,11 +38,14 @@ export class DessertsComponent {
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
+
   loading = computed(() => this.dessertsResource.isLoading());
   error = this.dessertsResource.error;
 
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
+
+  loadingRatings = signal(false);
 
   toRated(desserts: Dessert[], ratings: DessertIdToRatingMap): Dessert[] {
     return desserts.map((d) =>
