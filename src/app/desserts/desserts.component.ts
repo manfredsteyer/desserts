@@ -1,20 +1,18 @@
-import { JsonPipe } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, linkedSignal, resource, ResourceStatus, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Dessert } from '../data/dessert';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
-import { resource } from '../shared/resource/resource';
-import { debounce, debounceTrue, skipInitial } from '../shared/resource-utils';
-import { linkedSignal } from '../shared/linked/linked';
+import { debounce } from '../shared/wait';
+import { debounceTrue } from '../shared/resource-utils';
 import { getErrorMessage } from '../shared/get-error-message';
+import { Dessert } from '../data/dessert';
 
 @Component({
   selector: 'app-desserts',
   standalone: true,
-  imports: [DessertCardComponent, FormsModule, JsonPipe],
+  imports: [DessertCardComponent, FormsModule],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
 })
@@ -41,9 +39,12 @@ export class DessertsComponent {
   desserts = computed(() => this.dessertsResource.value() ?? []);
 
   ratingsResource = resource({
-    loader: skipInitial(() => {
+    loader: (param) => {
+      if (param.previous.status === ResourceStatus.Idle) {
+        return Promise.resolve(undefined);
+      }
       return this.#ratingService.loadExpertRatingsPromise();
-    })
+    }
   });
 
   ratings = linkedSignal(() => this.ratingsResource.value() ?? {});
@@ -68,7 +69,7 @@ export class DessertsComponent {
   }
 
   loadRatings(): void {
-    this.ratingsResource.refresh();
+    this.ratingsResource.reload();
   }
 
   updateRating(id: number, rating: number): void {
