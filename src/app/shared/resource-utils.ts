@@ -1,6 +1,4 @@
-import { computed, Signal } from '@angular/core';
-import { ResourceLoader } from './resource/api';
-import { resource } from './resource/resource';
+import { computed, resource, ResourceLoader, Signal } from '@angular/core';
 
 export function wait(
   msec: number,
