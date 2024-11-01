@@ -1,5 +1,4 @@
-import { Signal, untracked, WritableSignal } from '@angular/core';
-import { linkedSignal } from './linked/linked';
+import { linkedSignal, Signal, untracked, WritableSignal } from '@angular/core';
 
 export type DeepLink<T> = {
   [K in keyof T]: WritableSignal<T[K]>;

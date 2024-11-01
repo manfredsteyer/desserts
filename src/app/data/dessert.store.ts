@@ -1,11 +1,10 @@
-import { Injectable, inject, signal, computed } from "@angular/core";
+import { Injectable, inject, signal, computed, resource } from "@angular/core";
 import { debounceTrue, debounce, skipInitial } from "../shared/resource-utils";
 import { Dessert } from "./dessert";
 import { DessertService } from "./dessert.service";
 import { RatingService, DessertIdToRatingMap } from "./rating.service";
 import { getErrorMessage } from "../shared/get-error-message";
 import { DessertFilter } from "./dessert-filter";
-import { resource } from "../shared/resource/resource";
 
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
@@ -41,7 +40,7 @@ export class DessertStore {
   readonly error = computed(() => getErrorMessage(this.#dessertsResource.error() || this.#ratingsResource.error()));
 
   loadRatings(): void {
-    this.#ratingsResource.refresh();
+    this.#ratingsResource.reload();
   }
 
   updateFilter(filter: DessertFilter): void {

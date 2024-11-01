@@ -1,5 +1,4 @@
 import { Component, OnChanges, inject, input, numberAttribute } from '@angular/core';
-import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DessertDetailStore } from '../data/dessert-detail.store';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +7,7 @@ import { deepLink, flatten } from '../shared/linked-utils';
 @Component({
   selector: 'app-dessert-detail',
   standalone: true,
-  imports: [JsonPipe, RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule],
   templateUrl: './dessert-detail.component.html',
   styleUrl: './dessert-detail.component.css'
 })
