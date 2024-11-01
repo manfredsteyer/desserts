@@ -1,4 +1,4 @@
-import { ResourceLoaderParams } from "./resource/api";
+import { ResourceLoaderParams } from "@angular/core";
 
 export function wait(
   msec: number,
