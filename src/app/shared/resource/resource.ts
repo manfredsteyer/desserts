@@ -1,6 +1,6 @@
 // Taken from: https://github.com/angular/angular/blob/c611cd227045134553748df384c1458019882642/packages/core/src/resource/resource.ts
 
-import { assertInInjectionContext, WritableSignal, signal, ValueEqualityFn, untracked, Signal, EffectRef, Injector, inject, computed, effect, DestroyRef, ExperimentalPendingTasks } from "@angular/core";
+import { assertInInjectionContext, WritableSignal, signal, ValueEqualityFn, untracked, Signal, EffectRef, Injector, inject, computed, effect, DestroyRef, PendingTasks } from "@angular/core";
 import { SIGNAL, SignalNode } from "@angular/core/primitives/signals";
 import { ResourceOptions, ResourceRef, WritableResource, ResourceStatus, Resource, ResourceLoader } from "./api";
 
@@ -115,7 +115,7 @@ abstract class BaseWritableResource<T> implements WritableResource<T> {
 
 class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements ResourceRef<T> {
   private readonly request: Signal<{request: R; refresh: WritableSignal<number>}>;
-  private readonly pendingTasks: ExperimentalPendingTasks;
+  private readonly pendingTasks: PendingTasks;
   private readonly effectRef: EffectRef;
 
   private pendingController: AbortController | undefined;
@@ -129,7 +129,7 @@ class WritableResourceImpl<T, R> extends BaseWritableResource<T> implements Reso
   ) {
     super(equal);
     injector = injector ?? inject(Injector);
-    this.pendingTasks = injector.get(ExperimentalPendingTasks);
+    this.pendingTasks = injector.get(PendingTasks);
 
     this.request = computed(() => ({
       // The current request as defined for this resource.

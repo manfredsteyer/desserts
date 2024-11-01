@@ -3,11 +3,10 @@ import { Component, computed, model, signal } from '@angular/core';
 const maxRatingInCheatMode = 500;
 
 @Component({
-  selector: 'app-rating',
-  standalone: true,
-  imports: [],
-  templateUrl: './rating.component.html',
-  styleUrl: './rating.component.css',
+    selector: 'app-rating',
+    imports: [],
+    templateUrl: './rating.component.html',
+    styleUrl: './rating.component.css'
 })
 export class RatingComponent {
   rating = model.required<number>();
