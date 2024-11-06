@@ -19,7 +19,7 @@ import { ToastService } from '../shared/toast';
 @Component({
   selector: 'app-desserts',
   standalone: true,
-  imports: [DessertCardComponent, FormsModule, JsonPipe],
+  imports: [DessertCardComponent, FormsModule],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
