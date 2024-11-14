@@ -1,14 +1,12 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DessertStore } from '../data/dessert.store';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
-import { FormUpdateDirective } from '../shared/form-update.directive';
 
 @Component({
   selector: 'app-desserts',
   standalone: true,
-  imports: [DessertCardComponent, FormsModule, JsonPipe, FormUpdateDirective],
+  imports: [DessertCardComponent, FormsModule],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

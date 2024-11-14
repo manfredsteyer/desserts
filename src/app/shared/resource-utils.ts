@@ -1,6 +1,4 @@
-import { computed, Signal } from '@angular/core';
-import { ResourceLoader, ResourceLoaderParams } from './resource/api';
-import { resource } from './resource/resource';
+import { computed, resource, ResourceLoader, ResourceLoaderParams, Signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 export function wait(

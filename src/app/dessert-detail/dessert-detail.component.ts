@@ -1,7 +1,6 @@
-import { Component, OnChanges, inject, input, numberAttribute } from '@angular/core';
+import { Component, OnChanges, inject, input, linkedSignal, numberAttribute } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DessertDetailStore } from '../data/dessert-detail.store';
-import { linkedSignal } from '../shared/linked/linked';
 import { FormsModule } from '@angular/forms';
 
 @Component({

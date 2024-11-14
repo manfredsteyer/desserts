@@ -1,5 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { resource } from '../shared/resource/resource';
+import { Injectable, computed, inject, resource, signal } from '@angular/core';
 import { DessertService } from './dessert.service';
 import { Dessert, initDessert } from './dessert';
 

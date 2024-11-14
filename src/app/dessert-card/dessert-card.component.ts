@@ -8,12 +8,11 @@ import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 import { injectCdBlink } from '../shared/inject-cd-blink';
 import { RouterLink } from '@angular/router';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dessert-card',
   standalone: true,
-  imports: [RatingComponent, RouterLink, JsonPipe],
+  imports: [RatingComponent, RouterLink],
   templateUrl: './dessert-card.component.html',
   styleUrl: './dessert-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
