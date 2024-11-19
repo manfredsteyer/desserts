@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
@@ -11,7 +10,7 @@ import { ToastService } from '../shared/toast';
 @Component({
   selector: 'app-desserts',
   standalone: true,
-  imports: [DessertCardComponent, FormsModule, JsonPipe],
+  imports: [DessertCardComponent, FormsModule],
   templateUrl: './desserts.component.html',
   styleUrl: './desserts.component.css',
 })
