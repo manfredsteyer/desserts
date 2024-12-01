@@ -6,6 +6,7 @@ import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
 import { wait } from '../shared/wait';
+import { debounceTrue } from '../shared/resource-utils';
 
 @Component({
     selector: 'app-desserts',
@@ -36,7 +37,7 @@ export class DessertsComponent {
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
 
-  loading = this.dessertsResource.isLoading;
+  loading = debounceTrue(this.dessertsResource.isLoading, 300);
   error = this.dessertsResource.error;
 
   ratings = signal<DessertIdToRatingMap>({});

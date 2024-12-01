@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [class.gray]="!hydrated()">
   <h2 class="card-title">{{ dessert().originalName }}</h2>
   <i class="card-subtitle">{{ dessert().englishName }}</i>
 

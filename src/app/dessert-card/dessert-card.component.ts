@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { afterNextRender, Component, input, output, signal } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 
@@ -10,8 +10,15 @@ import { RatingComponent } from '../rating/rating.component';
 })
 export class DessertCardComponent {
   dessert = input.required<Dessert>();
-
   ratingChange = output<number>();
+
+  hydrated = signal(false);
+
+  constructor() {
+    afterNextRender(() => {
+      this.hydrated.set(true);
+    });
+  }
 
   updateRating(newRating: number): void {
     this.ratingChange.emit(newRating);
