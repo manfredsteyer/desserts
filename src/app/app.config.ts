@@ -1,10 +1,10 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
-import { provideAppErrorHandler } from './shared/app-error-handler';
 import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
+import { of } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +17,11 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(
       withIncrementalHydration(),
     ),
-    provideAppErrorHandler(),
+    provideExperimentalZonelessChangeDetection(),
+    provideAppInitializer(() => {
+      console.log('init application');
+      // return Promise.resolve();
+      return of();
+    })
   ],
 };
