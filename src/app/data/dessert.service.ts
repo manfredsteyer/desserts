@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, lastValueFrom, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { toPromise } from '../shared/to-promise';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
-import { toPromise } from '../shared/to-promise';
 
 const dataFile = '/assets/desserts.json';
 
@@ -29,7 +29,10 @@ export class DessertService {
       );
   }
 
-  findPromise(filter: DessertFilter, abortSignal: AbortSignal): Promise<Dessert[]> {
+  findPromise(
+    filter: DessertFilter,
+    abortSignal: AbortSignal,
+  ): Promise<Dessert[]> {
     return toPromise(this.find(filter), abortSignal);
   }
 
@@ -39,7 +42,16 @@ export class DessertService {
       .pipe(map((result) => result.find((d) => d.id == id)));
   }
 
-  findPromiseById(id: number, abortSignal?: AbortSignal): Promise<Dessert | undefined> {
+  findPromiseById(
+    id: number,
+    abortSignal?: AbortSignal,
+  ): Promise<Dessert | undefined> {
     return toPromise(this.findById(id), abortSignal);
+  }
+
+  async findIdsPromise(abortSignal?: AbortSignal): Promise<number[]> {
+    const desserts = await toPromise(this.find({ englishName: '', originalName: '' }), abortSignal);
+    const ids = desserts.map(d => d.id);
+    return ids;
   }
 }
