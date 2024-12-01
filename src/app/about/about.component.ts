@@ -1,6 +1,4 @@
-import { Component, effect } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { interval } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-about',
@@ -10,16 +8,6 @@ import { interval } from 'rxjs';
   styleUrl: './about.component.css',
 })
 export class AboutComponent {
-  counter$ = interval(1000);
-  counter = toSignal(this.counter$);
-
   constructor() {
-    this.counter$.pipe(takeUntilDestroyed()).subscribe((c) => {
-      console.log('counter$', c);
-    });
-
-    effect(() => {
-      console.log('counter', this.counter());
-    });
   }
 }
