@@ -28,9 +28,8 @@ export class DessertsComponent {
 
   dessertsResource = resource({
     request: this.dessertsCriteria,
-    loader: async (param) => {
-      await wait(300, param.abortSignal);
-      return await this.#dessertService.findPromise(param.request, param.abortSignal);
+    loader: (param) => {
+      return this.#dessertService.findPromise(param.request, param.abortSignal);
     }
   });
 
