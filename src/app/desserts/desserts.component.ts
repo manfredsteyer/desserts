@@ -1,11 +1,12 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
+// import { rxResource } from '@angular/core/rxjs-interop';
+
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
-import { wait } from '../shared/wait';
 
 @Component({
     selector: 'app-desserts',

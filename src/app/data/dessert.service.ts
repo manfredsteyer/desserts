@@ -29,7 +29,7 @@ export class DessertService {
       );
   }
 
-  findPromise(filter: DessertFilter, abortSignal: AbortSignal): Promise<Dessert[]> {
+  findPromise(filter: DessertFilter, abortSignal?: AbortSignal): Promise<Dessert[]> {
     return toPromise(this.find(filter), abortSignal);
   }
 
