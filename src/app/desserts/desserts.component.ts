@@ -26,5 +26,6 @@ export class DessertsComponent {
 
   updateRating(id: number, rating: number): void {
     this.#store.updateRating(id, rating);
+    console.log('updateRating, id, rating', id, rating);
   }
 }

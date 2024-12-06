@@ -119,6 +119,7 @@
   filter: grayscale(100%);
 }
 
+
 @keyframes l1 {
   to {
     clip-path: inset(0 -34% 0 0);

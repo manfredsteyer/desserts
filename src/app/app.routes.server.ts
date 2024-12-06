@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { RenderMode, ServerRoute } from '@angular/ssr';
+import { PrerenderFallback, RenderMode, ServerRoute } from '@angular/ssr';
 import { DessertService } from './data/dessert.service';
 
 export const serverRoutes: ServerRoute[] = [
@@ -11,6 +11,7 @@ export const serverRoutes: ServerRoute[] = [
       const ids = await dessertService.findIdsPromise();
       return ids.map((id) => ({ id: String(id) }));
     },
+    fallback: PrerenderFallback.None,
   },
   {
     path: '**',

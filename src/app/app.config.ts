@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
     ),
     provideClientHydration(
-      withIncrementalHydration(),
+      withIncrementalHydration()
     ),
     provideAppErrorHandler(),
   ],
