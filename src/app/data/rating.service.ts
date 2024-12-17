@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, lastValueFrom, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { toPromise } from '../shared/to-promise';
 
 export type DessertIdToRatingMap = Record<number, number>;
 
@@ -10,7 +11,7 @@ export class RatingService {
       10: 500,
     });
   }
-  loadExpertRatingsPromise(): Promise<DessertIdToRatingMap> {
-    return lastValueFrom(this.loadExpertRatings());
+  loadExpertRatingsPromise(abortSignal?: AbortSignal): Promise<DessertIdToRatingMap> {
+    return toPromise(this.loadExpertRatings(), abortSignal);
   }
 }
