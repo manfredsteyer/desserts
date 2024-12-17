@@ -1,97 +1,88 @@
-import { computed, inject } from '@angular/core';
-import { tapResponse } from '@ngrx/operators';
+import { computed, inject, linkedSignal, resource, ResourceStatus } from '@angular/core';
 import {
   patchState,
+  signalMethod,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
+  withProps,
   withState,
 } from '@ngrx/signals';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
-import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
-import { DessertIdToRatingMap, RatingService } from './rating.service';
+import { RatingService } from './rating.service';
 import { toRated } from './to-rated';
 
 export const DessertStore = signalStore(
-  { providedIn: 'root', protectedState: false },
+  { providedIn: 'root' },
   withState({
     filter: {
       originalName: '',
       englishName: 'Cake',
     },
-    loading: false,
-    ratings: {} as DessertIdToRatingMap,
-    desserts: [] as Dessert[],
   }),
-  withComputed((store) => ({
-    ratedDesserts: computed(() => toRated(store.desserts(), store.ratings())),
+  withProps(() => ({
+    _dessertService: inject(DessertService),
+    _ratingService: inject(RatingService),
+    _toastService: inject(ToastService),
   })),
-  withMethods(
-    (
-      store,
-      dessertService = inject(DessertService),
-      ratingService = inject(RatingService),
-      toastService = inject(ToastService),
-    ) => ({
-      updateFilter(filter: DessertFilter): void {
-        patchState(store, { filter });
+  withProps((store) => ({
+    _dessertsResource: resource({
+      request: store.filter,
+      loader: (params) => {
+        const filter = params.request;
+        const abortSignal = params.abortSignal;
+        return store._dessertService.findPromise(filter, abortSignal);
       },
-      loadRatings(): void {
-        patchState(store, { loading: true });
-
-        ratingService.loadExpertRatings().subscribe({
-          next: (ratings) => {
-            patchState(store, { ratings, loading: false });
-          },
-          error: (error) => {
-            patchState(store, { loading: false });
-            toastService.show('Error loading ratings!');
-            console.error(error);
-          },
-        });
-      },
-      updateRating(id: number, rating: number): void {
-        patchState(store, (state) => ({
-          ratings: {
-            ...state.ratings,
-            [id]: rating,
-          },
-        }));
-      },
-      loadDessertsByFilter: rxMethod<DessertFilter>(
-        pipe(
-          filter(
-            (f) => f.originalName.length >= 3 || f.englishName.length >= 3,
-          ),
-          debounceTime(300),
-          tap(() => patchState(store, { loading: true })),
-          switchMap((f) =>
-            dessertService.find(f).pipe(
-              tapResponse({
-                next: (desserts) => {
-                  patchState(store, { desserts, loading: false });
-                },
-                error: (error) => {
-                  toastService.show('Error loading desserts!');
-                  console.error(error);
-                  patchState(store, { loading: false });
-                },
-              }),
-            ),
-          ),
-        ),
-      ),
     }),
-  ),
-  withHooks({
-    onInit(store) {
-      const filter = store.filter;
-      store.loadDessertsByFilter(filter);
+    _ratingsResource: resource({
+      loader: (params) => {
+        if (params.previous.status === ResourceStatus.Idle) {
+          return Promise.resolve(undefined);
+        }
+        const abortSignal = params.abortSignal;
+        return store._ratingService.loadExpertRatingsPromise(abortSignal);
+      }
+    })
+  })),
+  withProps((store) => ({
+    dessertsResource: store._dessertsResource.asReadonly(),
+    ratingsResource: store._ratingsResource.asReadonly(),
+  })),
+ 
+  withComputed((store) => ({
+    ratedDesserts: computed(() => toRated(
+      store._dessertsResource.value(), 
+      store._ratingsResource.value()
+    )),
+    loading: computed(() => store._dessertsResource.isLoading() || store._dessertsResource.isLoading())
+  })),
+  withMethods((store) => ({
+    updateFilter: signalMethod<DessertFilter>((filter) => {
+      patchState(store, { filter });
+    }),
+    loadRatings: () => {
+      store._ratingsResource.reload();
     },
-  }),
+    updateRating: (id: number, rating: number) => {
+      store._ratingsResource.update(ratings => ({
+        ...ratings,
+        [id]: rating,
+      }));
+    },
+  })),
+
+  // Experiment
+  withProps((store) => ({
+    _loadingError: linkedSignal(() => store._dessertsResource.error() ?? store._dessertsResource.error()),
+  })),
+  withProps((store) => ({
+    loadingError: store._loadingError.asReadonly()
+  })),
+  withMethods((store) => ({
+    resetLoadingError() {
+      store._loadingError.set(undefined);
+    }
+  })),
 );
