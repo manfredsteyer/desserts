@@ -6,7 +6,7 @@ import { inject } from "@angular/core";
 import { DessertService } from "./dessert.service";
 
 export const DessertDetailStore = signalStore(
-    { providedIn: 'root' },
+    { providedIn: 'root', protectedState: false },
     withState({
         dessert: initDessert,
         loading: false,

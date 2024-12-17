@@ -3,11 +3,10 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
 @Component({
-  selector: 'app-about',
-  standalone: true,
-  imports: [],
-  templateUrl: './about.component.html',
-  styleUrl: './about.component.css',
+    selector: 'app-about',
+    imports: [],
+    templateUrl: './about.component.html',
+    styleUrl: './about.component.css'
 })
 export class AboutComponent {
   counter$ = interval(1000);

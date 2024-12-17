@@ -7,11 +7,10 @@ import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-dessert-detail',
-  standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
-  templateUrl: './dessert-detail.component.html',
-  styleUrl: './dessert-detail.component.css'
+    selector: 'app-dessert-detail',
+    imports: [RouterLink, ReactiveFormsModule],
+    templateUrl: './dessert-detail.component.html',
+    styleUrl: './dessert-detail.component.css'
 })
 export class DessertDetailComponent implements OnChanges {
   store = inject(DessertDetailStore);

@@ -7,12 +7,11 @@ import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { FormUpdateDirective } from '../shared/form-update.directive';
 
 @Component({
-  selector: 'app-desserts',
-  standalone: true,
-  imports: [DessertCardComponent, FormsModule, JsonPipe, FormUpdateDirective],
-  templateUrl: './desserts.component.html',
-  styleUrl: './desserts.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-desserts',
+    imports: [DessertCardComponent, FormsModule, FormUpdateDirective],
+    templateUrl: './desserts.component.html',
+    styleUrl: './desserts.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DessertsComponent {
   #store = inject(DessertStore);

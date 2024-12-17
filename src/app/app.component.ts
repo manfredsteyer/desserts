@@ -4,18 +4,15 @@ import { DessertsComponent } from './desserts/desserts.component';
 import { ToastComponent } from './shared/toast';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  imports: [
-    RouterOutlet, 
-    RouterLink,
-    DessertsComponent, 
-    ToastComponent, 
-    ToastComponent
-  ],
-
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [
+        RouterOutlet,
+        RouterLink,
+        ToastComponent,
+        ToastComponent
+    ]
 })
 export class AppComponent {
   title = 'dessert';

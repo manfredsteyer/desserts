@@ -18,7 +18,7 @@ import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
 
 export const DessertStore = signalStore(
-  { providedIn: 'root' },
+  { providedIn: 'root', protectedState: false },
   withState({
     filter: {
       originalName: '',

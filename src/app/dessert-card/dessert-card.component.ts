@@ -10,12 +10,11 @@ import { injectCdBlink } from '../shared/inject-cd-blink';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-dessert-card',
-  standalone: true,
-  imports: [RatingComponent, RouterLink],
-  templateUrl: './dessert-card.component.html',
-  styleUrl: './dessert-card.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-dessert-card',
+    imports: [RatingComponent, RouterLink],
+    templateUrl: './dessert-card.component.html',
+    styleUrl: './dessert-card.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DessertCardComponent {
   dessert = input.required<Dessert>();
