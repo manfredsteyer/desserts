@@ -1,9 +1,10 @@
-import { computed, inject, linkedSignal, resource, ResourceStatus } from '@angular/core';
+import { computed, inject, resource, ResourceStatus } from '@angular/core';
 import {
   patchState,
   signalMethod,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withProps,
   withState,
@@ -13,6 +14,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { RatingService } from './rating.service';
 import { toRated } from './to-rated';
+import { displayErrorEffect } from '../shared/display-error-effect';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -50,7 +52,6 @@ export const DessertStore = signalStore(
     dessertsResource: store._dessertsResource.asReadonly(),
     ratingsResource: store._ratingsResource.asReadonly(),
   })),
- 
   withComputed((store) => ({
     ratedDesserts: computed(() => toRated(
       store._dessertsResource.value(), 
@@ -72,17 +73,14 @@ export const DessertStore = signalStore(
       }));
     },
   })),
+  withHooks({
+    onInit(store) {
+      const toastService = store._toastService;
+      const dessertsError = store._dessertsResource.error;
+      const ratingsError = store._ratingsResource.error;
 
-  // Experiment
-  withProps((store) => ({
-    _loadingError: linkedSignal(() => store._dessertsResource.error() ?? store._dessertsResource.error()),
-  })),
-  withProps((store) => ({
-    loadingError: store._loadingError.asReadonly()
-  })),
-  withMethods((store) => ({
-    resetLoadingError() {
-      store._loadingError.set(undefined);
+      displayErrorEffect(dessertsError, toastService);
+      displayErrorEffect(ratingsError, toastService);
     }
-  })),
+  })
 );
