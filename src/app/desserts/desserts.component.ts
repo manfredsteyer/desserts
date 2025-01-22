@@ -25,7 +25,7 @@ export class DessertsComponent {
   }));
 
   constructor() {
-    this.#store.updateFilter(this.#linkedFilter)
+    this.#store.updateFilter(this.#linkedFilter);
   }
 
   loadRatings(): void {
