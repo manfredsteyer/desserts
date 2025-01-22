@@ -79,13 +79,6 @@ export const DessertStore = signalStore(
       const dessertsError = store._dessertsResource.error;
       const ratingsError = store._ratingsResource.error;
 
-      effect(() => {
-        const error = store._dessertsResource.error;
-        if (error) {
-          store._toastService.show('Error: ' + getMessage(error))
-        }
-      });
-
       displayErrorEffect(dessertsError, toastService);
       displayErrorEffect(ratingsError, toastService);
     }
