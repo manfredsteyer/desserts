@@ -13,7 +13,7 @@ export function displayErrorEffect(
   });
 }
 
-function getMessage(error: unknown) {
+export function getMessage(error: unknown) {
   if (error && typeof error === 'object' && 'message' in error) {
     return error.message;
   }

@@ -1,4 +1,4 @@
-import { computed, inject, resource, ResourceStatus } from '@angular/core';
+import { computed, effect, inject, resource, ResourceStatus } from '@angular/core';
 import {
   patchState,
   signalMethod,
@@ -14,7 +14,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { RatingService } from './rating.service';
 import { toRated } from './to-rated';
-import { displayErrorEffect } from '../shared/display-error-effect';
+import { displayErrorEffect, getMessage } from '../shared/display-error-effect';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -78,6 +78,13 @@ export const DessertStore = signalStore(
       const toastService = store._toastService;
       const dessertsError = store._dessertsResource.error;
       const ratingsError = store._ratingsResource.error;
+
+      effect(() => {
+        const error = store._dessertsResource.error;
+        if (error) {
+          store._toastService.show('Error: ' + getMessage(error))
+        }
+      });
 
       displayErrorEffect(dessertsError, toastService);
       displayErrorEffect(ratingsError, toastService);
