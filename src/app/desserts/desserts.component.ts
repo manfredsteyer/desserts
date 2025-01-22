@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } fr
 import { FormsModule } from '@angular/forms';
 import { DessertStore } from '../data/dessert.store';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
-import { FormUpdateDirective } from '../shared/form-update.directive';
 
 @Component({
     selector: 'app-desserts',
