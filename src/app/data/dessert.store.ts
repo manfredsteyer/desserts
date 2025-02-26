@@ -6,6 +6,8 @@ import { RatingService, DessertIdToRatingMap } from "./rating.service";
 import { getErrorMessage } from "../shared/get-error-message";
 import { DessertFilter } from "./dessert-filter";
 
+type Requested = undefined | true;
+
 @Injectable({ providedIn: 'root' })
 export class DessertStore {
   #dessertService = inject(DessertService);
@@ -13,6 +15,8 @@ export class DessertStore {
 
   readonly originalName = signal('');
   readonly englishName = signal('');
+
+  #ratingsRequested = signal<Requested>(undefined);
 
   #dessertsCriteria = computed(() => ({
     originalName: this.originalName(),
@@ -27,9 +31,10 @@ export class DessertStore {
   });
 
   #ratingsResource = resource({
-    loader: skipInitial(() => {
+    request: this.#ratingsRequested,
+    loader: () => {
       return this.#ratingService.loadExpertRatingsPromise();
-    })
+    }
   });
 
   readonly desserts = computed(() => this.#dessertsResource.value() ?? []);
@@ -40,6 +45,7 @@ export class DessertStore {
   readonly error = computed(() => getErrorMessage(this.#dessertsResource.error() || this.#ratingsResource.error()));
 
   loadRatings(): void {
+    this.#ratingsRequested.set(true);
     this.#ratingsResource.reload();
   }
 
