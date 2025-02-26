@@ -1,4 +1,4 @@
-import { computed, inject, resource, ResourceStatus } from '@angular/core';
+import { computed, inject, resource } from '@angular/core';
 import {
   patchState,
   signalMethod,
