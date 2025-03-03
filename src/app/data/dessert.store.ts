@@ -1,10 +1,11 @@
 import { Injectable, inject, signal, computed, resource } from "@angular/core";
-import { debounceTrue, debounce, skipInitial } from "../shared/resource-utils";
+import { debounceTrue, debounce } from "../shared/resource-utils";
 import { Dessert } from "./dessert";
 import { DessertService } from "./dessert.service";
 import { RatingService, DessertIdToRatingMap } from "./rating.service";
 import { getErrorMessage } from "../shared/get-error-message";
 import { DessertFilter } from "./dessert-filter";
+import { debounceSignal } from "../shared/debounce-signal";
 
 type Requested = undefined | true;
 
@@ -21,13 +22,15 @@ export class DessertStore {
     englishName: this.englishName(),
   }));
 
+  #debouncedCriteria = debounceSignal(this.#dessertsCriteria, 300);
+
   #ratingsRequested = signal<Requested>(undefined);
 
   #dessertsResource = resource({
-    request: this.#dessertsCriteria,
-    loader: debounce((param) => {
+    request: this.#debouncedCriteria,
+    loader: (param) => {
       return this.#dessertService.findPromise(param.request, param.abortSignal);
-    })
+    }
   });
 
   #ratingsResource = resource({
