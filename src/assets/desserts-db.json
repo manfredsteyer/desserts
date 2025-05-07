@@ -1,0 +1,103 @@
+{
+  "desserts": [
+    {
+      "id": 1,
+      "originalName": "Sachertorte",
+      "englishName": "Sacher Cake",
+      "description": "A dense chocolate cake with a layer of apricot jam and chocolate icing.",
+      "kcal": 360,
+      "rating": 3,
+      "image": "sachertorte.jpg"
+    },
+    {
+      "id": 2,
+      "originalName": "Apfelstrudel",
+      "englishName": "Apple Strudel",
+      "description": "A thin dough filled with apples, cinnamon, sugar, and often raisins.",
+      "kcal": 250,
+      "rating": 3,
+      "image": "apfelstrudel.jpg"
+    },
+    {
+      "id": 9,
+      "originalName": "Palatschinken",
+      "englishName": "Austrian Pancakes",
+      "description": "Thin pancakes, similar to French crêpes, filled with various sweet fillings like jam, curd cheese, or chocolate.",
+      "kcal": 220,
+      "rating": 3,
+      "image": "palatschniken.jpg"
+    },
+    {
+      "id": 10,
+      "originalName": "Eispalatschinken",
+      "englishName": "Ice Cream Pancakes",
+      "description": "Thin pancakes filled with ice cream and often topped with fruit sauce or chocolate syrup.",
+      "kcal": 280,
+      "rating": 3,
+      "image": "eispalatschinken.jpg"
+    },
+    {
+      "id": 3,
+      "originalName": "Kaiserschmarrn",
+      "englishName": "Emperor's Mess",
+      "description": "A fluffy, shredded pancake, served with powdered sugar and apple sauce or plum compote.",
+      "kcal": 300,
+      "rating": 3,
+      "image": "kaiserschmarn.jpg"
+    },
+    {
+      "id": 4,
+      "originalName": "Topfenstrudel",
+      "englishName": "Cheese Strudel",
+      "description": "A strudel filled with a sweet curd cheese (quark) mixture, often with raisins.",
+      "kcal": 270,
+      "rating": 3,
+      "image": "topfenstrudel.jpg"
+    },
+    {
+      "id": 5,
+      "originalName": "Marillenknödel",
+      "englishName": "Apricot Dumplings",
+      "description": "Small dumplings filled with apricots, encased in a dough made from curd cheese, semolina, or potatoes.",
+      "kcal": 200,
+      "rating": 3,
+      "image": "marillenknoedel.jpg"
+    },
+    {
+      "id": 6,
+      "originalName": "Linzer Torte",
+      "englishName": "Linzer Tart",
+      "description": "A crumbly tart with a layer of red fruit jelly, typically currant, and a lattice of dough on top.",
+      "kcal": 320,
+      "rating": 3,
+      "image": "linzertorte.jpg"
+    },
+    {
+      "id": 7,
+      "originalName": "Mohnnudeln",
+      "englishName": "Poppy Seed Noodles",
+      "description": "Potato noodles generously sprinkled with ground poppy seeds and sugar.",
+      "kcal": 350,
+      "rating": 3,
+      "image": "mohnnudeln.jpg"
+    },
+    {
+      "id": 8,
+      "originalName": "Salzburger Nockerln",
+      "englishName": "Salzburg Soufflé",
+      "description": "A sweet soufflé often dusted with powdered sugar and served with a fruit sauce.",
+      "kcal": 270,
+      "rating": 3,
+      "image": "salzburgernockerln.jpg"
+    },
+    {
+      "id": 11,
+      "originalName": "Buchteln",
+      "englishName": "Jam-Filled Buns",
+      "description": "Baked yeast dough buns, filled with jam, often served in a vanilla sauce.",
+      "kcal": 260,
+      "rating": 3,
+      "image": "buchteln.jpg"
+    }
+  ]
+}

@@ -1,4 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Signal,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime } from 'rxjs';
+
+import { httpResource } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
 import { DessertFilter } from '../data/dessert-filter';
@@ -19,11 +30,35 @@ export class DessertsComponent implements OnInit {
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
 
-  originalName = '';
-  englishName = '';
-  loading = false;
+  originalName = signal('');
+  englishName = signal('');
+  loading = signal(false);
 
-  desserts: Dessert[] = [];
+  criteria = computed(() => ({
+    originalName: this.originalName(),
+    englishName: this.englishName(),
+  }));
+
+  delayed = delaySignal(this.criteria, 300);
+
+  dessertsResource = httpResource<Dessert[]>(
+    () => ({
+      url: 'http://localhost:3000/desserts',
+      params: {
+        originalName_like: this.delayed().originalName,
+        englishName_like: this.delayed().englishName
+      },
+    }),
+    { defaultValue: [] },
+  );
+
+  desserts = this.dessertsResource.value;
+  error = this.dessertsResource.error;
+  isLoading = this.dessertsResource.isLoading;
+
+  ratings = signal<DessertIdToRatingMap>({});
+
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
 
   ngOnInit(): void {
     this.search();
@@ -31,19 +66,19 @@ export class DessertsComponent implements OnInit {
 
   search(): void {
     const filter: DessertFilter = {
-      originalName: this.originalName,
-      englishName: this.englishName,
+      originalName: this.originalName(),
+      englishName: this.englishName(),
     };
 
-    this.loading = true;
+    this.loading.set(true);
 
     this.#dessertService.find(filter).subscribe({
       next: (desserts) => {
-        this.desserts = desserts;
-        this.loading = false;
+        this.desserts.set(desserts);
+        this.loading.set(false);
       },
       error: (error) => {
-        this.loading = false;
+        this.loading.set(false);
         this.#toastService.show('Error loading desserts!');
         console.error(error);
       },
@@ -57,18 +92,18 @@ export class DessertsComponent implements OnInit {
   }
 
   loadRatings(): void {
-    this.loading = true;
+    this.loading.set(true);
 
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
-        const rated = this.toRated(this.desserts, ratings);
-        this.desserts = rated;
-        this.loading = false;
+        this.ratings.set(ratings);
+
+        this.loading.set(false);
       },
       error: (error) => {
         this.#toastService.show('Error loading ratings!');
         console.error(error);
-        this.loading = false;
+        this.loading.set(false);
       },
     });
   }
@@ -76,4 +111,10 @@ export class DessertsComponent implements OnInit {
   updateRating(id: number, rating: number): void {
     console.log('rating changed', id, rating);
   }
+}
+
+function delaySignal<T>(source: Signal<T>, timeMsec: number): Signal<T> {
+  return toSignal(toObservable(source).pipe(debounceTime(timeMsec)), {
+    initialValue: source(),
+  });
 }

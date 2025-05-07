@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "format": "prettier **/*.{ts,html,css} --write"
+    "format": "prettier **/*.{ts,html,css} --write",
+    "json-server": "json-server src/assets/desserts-db.json"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-unused-imports": "^3.1.0",
     "jasmine-core": "~5.1.0",
+    "json-server": "^0.17.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
