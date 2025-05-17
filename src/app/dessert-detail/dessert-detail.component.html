@@ -1,4 +1,7 @@
-@if (loading()) {
+<div class="dialog">
+  <h1>Detail</h1>
+  
+  @if (loading()) {
   <div class="loader"></div>
 } @else {
   <form [formGroup]="formGroup">
@@ -14,15 +17,9 @@
       <label for="kcal"> kcal </label>
       <input formControlName="kcal" />
     </div>
+   
+    <button type="submit" (click)="save()" class="btn">Save</button>
 
-    <button type="button" [routerLink]="['..', id() - 1]" class="btn">
-      ◀
-    </button>
-
-    <button type="button" (click)="save()" class="btn">Save</button>
-
-    <button type="button" [routerLink]="['..', id() + 1]" class="btn">
-      ▶
-    </button>
   </form>
 }
+</div>

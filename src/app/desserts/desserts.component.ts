@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { DessertStore } from '../data/dessert.store';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
+import { MatDialog } from '@angular/material/dialog';
+import { DessertDetailComponent } from '../dessert-detail/dessert-detail.component';
 
 @Component({
     selector: 'app-desserts',
@@ -14,6 +16,7 @@ import { ToastService } from '../shared/toast';
 export class DessertsComponent {
   #store = inject(DessertStore);
   #toast = inject(ToastService);
+  #dialog = inject(MatDialog);
 
   originalName = linkedSignal(() => this.#store.filter.originalName());
   englishName = linkedSignal(() => this.#store.filter.englishName());
@@ -43,5 +46,14 @@ export class DessertsComponent {
 
   updateRating(id: number, rating: number): void {
     this.#store.updateRating(id, rating);
+  }
+
+  showDetail(id: number) {
+    this.#dialog.open(DessertDetailComponent, {
+      width: '500px',
+      data: {
+        id
+      }
+    })
   }
 }

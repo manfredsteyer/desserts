@@ -25,6 +25,7 @@
     <app-dessert-card
       [dessert]="dessert"
       (ratingChange)="updateRating(dessert.id, $event)"
+      (detailRequest)="showDetail($event)"
     ></app-dessert-card>
   }
   @if (ratedDesserts().length === 0 && !loading()) {
