@@ -27,7 +27,7 @@ export class DessertsComponent {
   }));
 
   constructor() {
-    this.#store.updateFilter(this.#linkedFilter);
+    this.#store.loadDesserts(this.#linkedFilter);
 
     effect(() => {
       const count = this.ratedDesserts().length;

@@ -21,7 +21,7 @@ export class DessertDetailComponent implements OnChanges {
     kcal: [0],
   });
 
-  dessert = this.store.dessertResource.value;
+  dessert = this.store.dessert;
   loading = this.store.processing;
 
   id = input.required({
@@ -36,7 +36,7 @@ export class DessertDetailComponent implements OnChanges {
 
   ngOnChanges(): void {
     const id = this.id();
-    this.store.updateFilter({ dessertId: id });
+    this.store.load({ dessertId: id });
   }
 
   save(): void {

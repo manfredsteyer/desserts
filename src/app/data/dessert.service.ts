@@ -1,33 +1,23 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Injectable, inject, resource } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { toPromise } from '../shared/to-promise';
 import { BASE_URL } from './base-url';
 import { Dessert, initDessert } from './dessert';
 import { DessertDetailFilter, DessertFilter } from './dessert-filter';
 
-const dataFile = '/assets/desserts.json';
-
 @Injectable({ providedIn: 'root' })
 export class DessertService {
   #http = inject(HttpClient);
 
-  find(filter: DessertFilter): Observable<Dessert[]> {
-    return this.#http
-      .get<Dessert[]>(dataFile)
-      .pipe(
-        map((result) =>
-          result.filter(
-            (d) =>
-              d.originalName
-                .toLowerCase()
-                .includes(filter.originalName.toLowerCase()) &&
-              d.englishName
-                .toLowerCase()
-                .includes(filter.englishName.toLowerCase()),
-          ),
-        ),
-      );
+  save(id: number, dessert: Partial<Dessert>): Observable<Dessert> {
+    const url = `${BASE_URL}/desserts/${id}`;
+    return this.#http.patch<Dessert>(url, dessert);
+  }
+
+  find(params: DessertFilter): Observable<Dessert[]> {
+    const url = `${BASE_URL}/desserts`;
+    return this.#http.get<Dessert[]>(url, { params });
   }
 
   findPromise(
@@ -38,9 +28,8 @@ export class DessertService {
   }
 
   findById(id: number): Observable<Dessert> {
-    return this.#http
-      .get<Dessert[]>(dataFile)
-      .pipe(map((result) => result.filter((d) => d.id === id)[0]));
+    const url = `${BASE_URL}/desserts/${id}`;
+    return this.#http.get<Dessert>(url);
   }
 
   findPromiseById(id: number, abortSignal?: AbortSignal): Promise<Dessert> {

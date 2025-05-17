@@ -4,12 +4,11 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { debounceTime, filter, pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
@@ -38,9 +37,6 @@ export const DessertStore = signalStore(
       ratingService = inject(RatingService),
       toastService = inject(ToastService),
     ) => ({
-      updateFilter(filter: DessertFilter): void {
-        patchState(store, { filter });
-      },
       loadRatings(): void {
         patchState(store, { loading: true });
 
@@ -63,12 +59,8 @@ export const DessertStore = signalStore(
           },
         }));
       },
-      loadDessertsByFilter: rxMethod<DessertFilter>(
+      loadDesserts: rxMethod<DessertFilter>(
         pipe(
-          filter(
-            (f) => f.originalName.length >= 3 || f.englishName.length >= 3,
-          ),
-          debounceTime(300),
           tap(() => patchState(store, { loading: true })),
           switchMap((f) =>
             dessertService.find(f).pipe(
@@ -87,11 +79,5 @@ export const DessertStore = signalStore(
         ),
       ),
     }),
-  ),
-  withHooks({
-    onInit(store) {
-      const filter = store.filter;
-      store.loadDessertsByFilter(filter);
-    },
-  }),
+  )
 );
