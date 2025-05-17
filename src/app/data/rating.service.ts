@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, resource } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { toPromise } from '../shared/to-promise';
+import { Requested } from './requested';
 
 export type DessertIdToRatingMap = Record<number, number>;
 
@@ -11,7 +12,19 @@ export class RatingService {
       10: 500,
     });
   }
-  loadExpertRatingsPromise(abortSignal?: AbortSignal): Promise<DessertIdToRatingMap> {
+  loadExpertRatingsPromise(
+    abortSignal?: AbortSignal,
+  ): Promise<DessertIdToRatingMap> {
     return toPromise(this.loadExpertRatings(), abortSignal);
+  }
+
+  createResource(requested: () => Requested) {
+    return resource({
+      request: requested,
+      loader: (params) => {
+        const abortSignal = params.abortSignal;
+        return this.loadExpertRatingsPromise(abortSignal);
+      },
+    });
   }
 }

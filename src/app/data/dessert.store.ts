@@ -1,4 +1,4 @@
-import { computed, inject, resource } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
   patchState,
   signalMethod,
@@ -15,8 +15,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { RatingService } from './rating.service';
 import { toRated } from './to-rated';
-
-export type Requested = undefined | true;
+import { Requested } from './requested';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -33,21 +32,8 @@ export const DessertStore = signalStore(
     _toastService: inject(ToastService),
   })),
   withProps((store) => ({
-    _dessertsResource: resource({
-      request: store.filter,
-      loader: (params) => {
-        const filter = params.request;
-        const abortSignal = params.abortSignal;
-        return store._dessertService.findPromise(filter, abortSignal);
-      },
-    }),
-    _ratingsResource: resource({
-      request: store.ratingsRequested,
-      loader: (params) => {
-        const abortSignal = params.abortSignal;
-        return store._ratingService.loadExpertRatingsPromise(abortSignal);
-      },
-    }),
+    _dessertsResource: store._dessertService.createResource(store.filter),
+    _ratingsResource: store._ratingService.createResource(store.ratingsRequested),
   })),
   withProps((store) => ({
     dessertsResource: store._dessertsResource.asReadonly(),

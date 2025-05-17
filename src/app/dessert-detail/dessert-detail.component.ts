@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component, OnChanges, effect, inject, input, numberAttribute, signal } from '@angular/core';
 import { DessertDetailStore } from '../data/dessert-detail.store';
-import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -23,7 +22,7 @@ export class DessertDetailComponent implements OnChanges {
     kcal: [0],
   });
 
-  dessert = this.store.dessert;
+  dessert = this.store.dessertResource.value;
   loading = this.store.loading;
 
   id = input.required({
@@ -34,11 +33,12 @@ export class DessertDetailComponent implements OnChanges {
     effect(() => {
       this.formGroup.patchValue(this.dessert());
     });
+
   }
 
   ngOnChanges(): void {
     const id = this.id();
-    this.store.load(id);
+    this.store.updateFilter({ dessertId: id });
   }
 
 }

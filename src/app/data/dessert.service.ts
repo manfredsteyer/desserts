@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Injectable, inject, resource } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Dessert } from './dessert';
-import { DessertFilter } from './dessert-filter';
 import { toPromise } from '../shared/to-promise';
+import { Dessert, initDessert } from './dessert';
+import { DessertDetailFilter, DessertFilter } from './dessert-filter';
+import { BASE_URL } from './base-url';
 
 const dataFile = '/assets/desserts.json';
 
@@ -29,7 +30,10 @@ export class DessertService {
       );
   }
 
-  findPromise(filter: DessertFilter, abortSignal?: AbortSignal): Promise<Dessert[]> {
+  findPromise(
+    filter: DessertFilter,
+    abortSignal?: AbortSignal,
+  ): Promise<Dessert[]> {
     return toPromise(this.find(filter), abortSignal);
   }
 
@@ -43,16 +47,52 @@ export class DessertService {
     return toPromise(this.findById(id), abortSignal);
   }
 
-  findCategories(): string[] {
-    return ['Austrian', 'Italien'];
+  _createResource(filter: () => DessertFilter) {
+    return resource({
+      request: filter,
+      loader: (params) => {
+        const filter = params.request;
+        const abortSignal = params.abortSignal;
+        return this.findPromise(filter, abortSignal);
+      },
+    });
   }
 
-  findSubCategories(category: string): string[] {
-    if (category === 'Austrian') {
-      return ['Ice Cream', 'Cakes'];
-    }
-    else {
-      return ['Gelati', 'Torta'];
-    }
+  createResource(filter: () => DessertFilter) {
+    return httpResource<Dessert[]>(
+      () => ({
+        url: `${BASE_URL}/desserts`,
+        params: {
+          originalName_like: filter().originalName,
+          englishName_like: filter().englishName,
+        },
+      }),
+      {
+        defaultValue: [],
+      },
+    );
   }
+
+  _createResourceById(filter: () => DessertDetailFilter) {
+    return resource({
+      request: filter,
+      loader: (params) => {
+        const filter = params.request;
+        const abortSignal = params.abortSignal;
+        return this.findPromiseById(filter.dessertId, abortSignal);
+      },
+      defaultValue: initDessert,
+    });
+  }
+
+  createResourceById(filter: () => DessertDetailFilter) {
+    return httpResource<Dessert>(
+      () => `${BASE_URL}/desserts/${filter().dessertId}`,
+      {
+        defaultValue: initDessert,
+      },
+    );
+  }
+
+
 }
