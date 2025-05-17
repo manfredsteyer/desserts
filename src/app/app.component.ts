@@ -8,7 +8,7 @@ import { ToastComponent } from './shared/toast';
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  imports: [RouterOutlet, DessertsComponent, ToastComponent],
+  imports: [DessertsComponent, ToastComponent],
 })
 export class AppComponent {
   title = 'dessert';

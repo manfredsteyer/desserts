@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Dessert } from '../data/dessert';
 import { RatingComponent } from '../rating/rating.component';
 
@@ -8,6 +8,7 @@ import { RatingComponent } from '../rating/rating.component';
   imports: [RatingComponent],
   templateUrl: './dessert-card.component.html',
   styleUrl: './dessert-card.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DessertCardComponent {
   @Input({ required: true })
