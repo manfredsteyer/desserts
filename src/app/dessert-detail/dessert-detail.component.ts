@@ -1,9 +1,8 @@
-/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, OnChanges, effect, inject, input, numberAttribute, signal } from '@angular/core';
+import { Component, OnChanges, effect, inject, input, numberAttribute } from '@angular/core';
 import { DessertDetailStore } from '../data/dessert-detail.store';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Dessert } from '../data/dessert';
 
 @Component({
     selector: 'app-dessert-detail',
@@ -23,7 +22,7 @@ export class DessertDetailComponent implements OnChanges {
   });
 
   dessert = this.store.dessertResource.value;
-  loading = this.store.loading;
+  loading = this.store.processing;
 
   id = input.required({
     transform: numberAttribute
@@ -39,6 +38,11 @@ export class DessertDetailComponent implements OnChanges {
   ngOnChanges(): void {
     const id = this.id();
     this.store.updateFilter({ dessertId: id });
+  }
+
+  save(): void {
+    const dessert: Partial<Dessert> = this.formGroup.value;
+    this.store.save(this.id(), dessert);
   }
 
 }

@@ -8,7 +8,7 @@ export function displayErrorEffect(
   effect(() => {
     const error = errorSignal();
     if (error) {
-      toastService.show('Error loading data. Did you start the JSON Server (npm start json-server)?');
+      toastService.show('Error loading data. Did you start the backend (npm start server)?');
       console.error('Error loading data', error);
     }
   });

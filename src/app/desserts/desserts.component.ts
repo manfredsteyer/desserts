@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DessertStore } from '../data/dessert.store';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
+import { ToastService } from '../shared/toast';
 
 @Component({
     selector: 'app-desserts',
@@ -12,6 +13,7 @@ import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 })
 export class DessertsComponent {
   #store = inject(DessertStore);
+  #toast = inject(ToastService);
 
   originalName = linkedSignal(() => this.#store.filter.originalName());
   englishName = linkedSignal(() => this.#store.filter.englishName());
@@ -26,6 +28,13 @@ export class DessertsComponent {
 
   constructor() {
     this.#store.updateFilter(this.#linkedFilter);
+
+    effect(() => {
+      const count = this.ratedDesserts().length;
+      if (count > 0) {
+        this.#toast.show(count + ' desserts loaded')
+      }
+    });
   }
 
   loadRatings(): void {

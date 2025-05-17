@@ -1,0 +1,6 @@
+PATCH http://localhost:3000/desserts/2
+Content-Type: application/json
+
+{
+    "kcal": 503
+}

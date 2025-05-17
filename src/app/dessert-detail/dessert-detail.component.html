@@ -14,16 +14,15 @@
       <label for="kcal"> kcal </label>
       <input formControlName="kcal" />
     </div>
+
+    <button type="button" [routerLink]="['..', id() - 1]" class="btn">
+      ◀
+    </button>
+
+    <button type="button" (click)="save()" class="btn">Save</button>
+
+    <button type="button" [routerLink]="['..', id() + 1]" class="btn">
+      ▶
+    </button>
   </form>
-
-  <button type="button" [routerLink]="['..', id() - 1]" class="btn">
-    Previous
-  </button>
-
-  
-
-  <button type="button" [routerLink]="['..', id() + 1]" class="btn">
-    Next
-  </button>
-
 }

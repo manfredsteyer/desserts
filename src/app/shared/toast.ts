@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 export class ToastService {
   message$ = new Subject<string>();
   show(message: string): void {
+    console.log('show', message);
     this.message$.next(message);
   }
 }
