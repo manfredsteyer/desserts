@@ -2,7 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Dessert, initDessert } from './dessert';
-import { DessertDetailFilter, DessertFilter } from './dessert-filter';
+import { DessertDetailFilter } from './dessert-filter';
 import { BASE_URL } from './base-url';
 
 @Injectable({ providedIn: 'root' })
