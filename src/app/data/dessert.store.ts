@@ -22,7 +22,7 @@ export const DessertStore = signalStore(
   withState({
     filter: {
       originalName: '',
-      englishName: 'Cake',
+      englishName: '',
     },
     ratingsRequested: undefined as Requested
   }),
@@ -32,7 +32,10 @@ export const DessertStore = signalStore(
     _toastService: inject(ToastService),
   })),
   withProps((store) => ({
-    _dessertsResource: store._dessertService.createResource(store.filter),
+    _dessertsResource: store._dessertService.createResource(
+      store.filter.originalName, 
+      store.filter.englishName
+    ),
     _ratingsResource: store._ratingService.createResource(store.ratingsRequested),
   })),
   withProps((store) => ({

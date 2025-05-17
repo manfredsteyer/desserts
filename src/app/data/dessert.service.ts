@@ -14,13 +14,13 @@ export class DessertService {
     return this.#http.patch<Dessert>(url, dessert);
   }
 
-  createResource(filter: () => DessertFilter) {
+  createResource(originalName: () => string, englishName: () => string) {
     return httpResource<Dessert[]>(
       () => ({
         url: `${BASE_URL}/desserts`,
         params: {
-          originalName_like: filter().originalName,
-          englishName_like: filter().englishName,
+          originalName: originalName(),
+          englishName: englishName(),
         },
       }),
       {

@@ -32,7 +32,6 @@ export class DessertDetailComponent implements OnChanges {
     effect(() => {
       this.formGroup.patchValue(this.dessert());
     });
-
   }
 
   ngOnChanges(): void {
