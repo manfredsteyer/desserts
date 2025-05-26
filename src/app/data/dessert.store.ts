@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { on, withReducer } from '@ngrx/signals/events';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { dessertDetailStoreEvents } from './dessert-detail.events';
@@ -18,6 +18,7 @@ import { DessertFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
+import { dessertStoreEvents } from './dessert.events';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -37,13 +38,12 @@ export const DessertStore = signalStore(
   })),
   withReducer(
     on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
-      const updated = payload.dessert;
-      return (store) => ({
-        desserts: store.desserts.map((d) =>
-          d.id === updated.id ? updated : d,
-        ),
-      });
-      // return updateDessert(updated);
+      return updateDessert(payload.dessert);
+    }),
+    on(dessertStoreEvents.loadDesserts, ({ payload }) => {
+      return (state) => {
+        return patchState(state, { filter: payload.filter });
+      }
     }),
   ),
   withComputed((store) => ({
