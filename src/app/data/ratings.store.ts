@@ -38,7 +38,10 @@ export const RatingsStore = signalStore(
       });
     }),
     on(ratingEvents.loadRatingsError, ({ payload }) => {
-      return { error: payload.error };
+      return { 
+        error: payload.error, 
+        loading: false 
+      };
     }),
   ),
   withEffects((store) => ({

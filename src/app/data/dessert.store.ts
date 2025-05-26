@@ -49,7 +49,10 @@ export const DessertStore = signalStore(
     on(
       dessertEvents.loadDessertsError,
       ({ payload }) => {
-        return { error: payload.error };
+        return { 
+          error: payload.error, 
+          loading: false 
+        };
       },
     ),
   ),
