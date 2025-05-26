@@ -7,12 +7,16 @@ import {
   withProps,
   withState,
 } from '@ngrx/signals';
+
+import { Dispatcher } from '@ngrx/signals/events';
+
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
 import { Dessert, initDessert } from './dessert';
 import { DessertDetailFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
+import { dessertDetailStoreEvents } from './dessert-detail.events';
 
 export const DessertDetailStore = signalStore(
   { providedIn: 'root' },
@@ -27,6 +31,7 @@ export const DessertDetailStore = signalStore(
   withProps(() => ({
     _dessertService: inject(DessertService),
     _toastService: inject(ToastService),
+    _dispatcher: inject(Dispatcher)
   })),
   withMethods((store) => ({
     load: rxMethod<DessertDetailFilter>(
@@ -55,6 +60,12 @@ export const DessertDetailStore = signalStore(
         next: (savedDessert) => {
           patchState(store, { dessert: savedDessert });
           patchState(store, { processing: false });
+          
+          const event = dessertDetailStoreEvents.dessertUpdated({
+            dessert: savedDessert
+          });
+          store._dispatcher.dispatch(event);
+
           store._toastService.show('Successfully saved!');
         },
         error: (error: unknown) => {
