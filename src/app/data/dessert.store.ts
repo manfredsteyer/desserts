@@ -4,12 +4,11 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withProps,
   withState,
 } from '@ngrx/signals';
-import { on, withReducer, Events } from '@ngrx/signals/events';
+import { on, withReducer } from '@ngrx/signals/events';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
@@ -35,7 +34,6 @@ export const DessertStore = signalStore(
     _dessertService: inject(DessertService),
     _ratingService: inject(RatingService),
     _toastService: inject(ToastService),
-    _events: inject(Events),
   })),
   withReducer(
     on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
@@ -93,17 +91,7 @@ export const DessertStore = signalStore(
         ),
       ),
     ),
-  })),
-  withHooks({
-    onInit(store) {
-      store._events.on(dessertDetailStoreEvents.dessertUpdated).subscribe(event => {
-        const updated = event.payload.dessert;
-        patchState(store, (state) => ({
-          desserts: state.desserts.map(d => d.id === updated.id ? updated : d)
-        }));
-      });
-    }
-  })
+  }))
 );
 
 export type DessertSlice = {
