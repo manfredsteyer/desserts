@@ -6,6 +6,7 @@ import { exhaustMap } from 'rxjs';
 import { ToastService } from '../shared/toast';
 import { ratingEvents } from './rating.events';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
 export const RatingsStore = signalStore(
   { providedIn: 'root' },
@@ -57,4 +58,5 @@ export const RatingsStore = signalStore(
       ),
     ),
   })),
+  withDevtools('RatingsStore')
 );

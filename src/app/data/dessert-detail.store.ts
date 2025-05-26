@@ -17,6 +17,7 @@ import { Dessert, initDessert } from './dessert';
 import { DessertDetailFilter } from './dessert-filter';
 import { DessertService } from './dessert.service';
 import { dessertDetailStoreEvents } from './dessert-detail.events';
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
 export const DessertDetailStore = signalStore(
   { providedIn: 'root' },
@@ -76,4 +77,5 @@ export const DessertDetailStore = signalStore(
       });
     },
   })),
+  withDevtools('DessertDetailStore')
 );
