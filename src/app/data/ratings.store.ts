@@ -38,20 +38,23 @@ export const RatingsStore = signalStore(
       });
     }),
     on(ratingEvents.loadRatingsError, ({ payload }) => {
-      return { 
-        error: payload.error, 
-        loading: false 
+      return {
+        error: payload.error,
+        loading: false,
       };
     }),
   ),
   withEffects((store) => ({
     loadRatings$: store._events.on(ratingEvents.loadRatings).pipe(
-      exhaustMap(() => store._ratingService.loadExpertRatings()),
-      mapResponse({
-        next: (ratings) => ratingEvents.loadRatingsSuccess({ ratings }),
-        error: (error) =>
-          ratingEvents.loadRatingsError({ error: String(error) }),
-      }),
+      exhaustMap(() =>
+        store._ratingService.loadExpertRatings().pipe(
+          mapResponse({
+            next: (ratings) => ratingEvents.loadRatingsSuccess({ ratings }),
+            error: (error) =>
+              ratingEvents.loadRatingsError({ error: String(error) }),
+          }),
+        ),
+      ),
     ),
   })),
 );

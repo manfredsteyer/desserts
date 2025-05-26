@@ -1,6 +1,6 @@
-import { computed, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { mapResponse } from '@ngrx/operators';
-import { signalStore, withComputed, withProps, withState } from '@ngrx/signals';
+import { signalStore, withProps, withState } from '@ngrx/signals';
 import { Events, on, withEffects, withReducer } from '@ngrx/signals/events';
 import { switchMap } from 'rxjs';
 import { ToastService } from '../shared/toast';
@@ -8,7 +8,6 @@ import { Dessert } from './dessert';
 import { dessertDetailStoreEvents } from './dessert-detail.events';
 import { dessertEvents } from './dessert.events';
 import { DessertService } from './dessert.service';
-import { RatingService } from './rating.service';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -35,35 +34,35 @@ export const DessertStore = signalStore(
       });
     }),
     on(dessertEvents.loadDesserts, ({ payload }) => {
-      return { 
-        filter: payload, 
+      return {
+        filter: payload,
         loading: true,
       };
     }),
     on(dessertEvents.loadDessertsSuccess, ({ payload }) => {
-      return { 
+      return {
         desserts: payload.desserts,
         loading: false,
       };
     }),
-    on(
-      dessertEvents.loadDessertsError,
-      ({ payload }) => {
-        return { 
-          error: payload.error, 
-          loading: false 
-        };
-      },
-    ),
+    on(dessertEvents.loadDessertsError, ({ payload }) => {
+      return {
+        error: payload.error,
+        loading: false,
+      };
+    }),
   ),
   withEffects((store) => ({
     loadDesserts$: store._events.on(dessertEvents.loadDesserts).pipe(
-      switchMap((e) => store._dessertService.find(e.payload)),
-      mapResponse({
-        next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
-        error: (error) =>
-          dessertEvents.loadDessertsError({ error: String(error) }),
-      }),
+      switchMap((e) =>
+        store._dessertService.find(e.payload).pipe(
+          mapResponse({
+            next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
+            error: (error) =>
+              dessertEvents.loadDessertsError({ error: String(error) }),
+          }),
+        ),
+      ),
     ),
   })),
 );
