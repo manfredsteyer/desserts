@@ -41,13 +41,27 @@ export const DessertStore = signalStore(
       });
     }),
     on(dessertEvents.loadDesserts, ({ payload }) => {
-      return { filter: payload };
+      return {
+        filter: payload,
+        loading: true,
+      };
     }),
     on(dessertEvents.loadDessertsSuccess, ({ payload }) => {
-      return { desserts: payload.desserts };
+      return {
+        desserts: payload.desserts,
+        loading: false,
+      };
+    }),
+    on(dessertEvents.loadRatings, () => {
+      return {
+        loading: false,
+      };
     }),
     on(dessertEvents.loadRatingsSuccess, ({ payload }) => {
-      return { ratings: payload.ratings };
+      return {
+        ratings: payload.ratings,
+        loading: false,
+      };
     }),
     on(dessertEvents.updateRating, ({ payload }) => {
       return (state) => ({
@@ -61,7 +75,10 @@ export const DessertStore = signalStore(
       dessertEvents.loadDessertsError,
       dessertEvents.loadRatingsError,
       ({ payload }) => {
-        return { error: payload.error };
+        return {
+          error: payload.error,
+          loading: false,
+        };
       },
     ),
   ),
