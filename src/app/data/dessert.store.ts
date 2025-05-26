@@ -8,8 +8,7 @@ import { Dessert } from './dessert';
 import { dessertDetailStoreEvents } from './dessert-detail.events';
 import { dessertEvents } from './dessert.events';
 import { DessertService } from './dessert.service';
-import { DessertIdToRatingMap, RatingService } from './rating.service';
-import { toRated } from './to-rated';
+import { RatingService } from './rating.service';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -19,18 +18,13 @@ export const DessertStore = signalStore(
       englishName: '',
     },
     loading: false,
-    ratings: {} as DessertIdToRatingMap,
     desserts: [] as Dessert[],
     error: '',
   }),
   withProps(() => ({
     _dessertService: inject(DessertService),
-    _ratingService: inject(RatingService),
     _toastService: inject(ToastService),
     _events: inject(Events),
-  })),
-  withComputed((store) => ({
-    ratedDesserts: computed(() => toRated(store.desserts(), store.ratings())),
   })),
   withReducer(
     on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
@@ -41,25 +35,19 @@ export const DessertStore = signalStore(
       });
     }),
     on(dessertEvents.loadDesserts, ({ payload }) => {
-      return { filter: payload };
+      return { 
+        filter: payload, 
+        loading: true,
+      };
     }),
     on(dessertEvents.loadDessertsSuccess, ({ payload }) => {
-      return { desserts: payload.desserts };
-    }),
-    on(dessertEvents.loadRatingsSuccess, ({ payload }) => {
-      return { ratings: payload.ratings };
-    }),
-    on(dessertEvents.updateRating, ({ payload }) => {
-      return (state) => ({
-        ratings: {
-          ...state.ratings,
-          [payload.dessertId]: payload.rating,
-        },
-      });
+      return { 
+        desserts: payload.desserts,
+        loading: false,
+      };
     }),
     on(
       dessertEvents.loadDessertsError,
-      dessertEvents.loadRatingsError,
       ({ payload }) => {
         return { error: payload.error };
       },
@@ -72,14 +60,6 @@ export const DessertStore = signalStore(
         next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
         error: (error) =>
           dessertEvents.loadDessertsError({ error: String(error) }),
-      }),
-    ),
-    loadRatings$: store._events.on(dessertEvents.loadRatings).pipe(
-      switchMap(() => store._ratingService.loadExpertRatings()),
-      mapResponse({
-        next: (ratings) => dessertEvents.loadRatingsSuccess({ ratings }),
-        error: (error) =>
-          dessertEvents.loadRatingsError({ error: String(error) }),
       }),
     ),
   })),

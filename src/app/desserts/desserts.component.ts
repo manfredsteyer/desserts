@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   linkedSignal,
@@ -10,6 +11,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Dispatcher } from '@ngrx/signals/events';
 import { dessertEvents } from '../data/dessert.events';
 import { DessertStore } from '../data/dessert.store';
+import { ratingEvents } from '../data/rating.events';
+import { RatingsStore } from '../data/ratings.store';
+import { toRated } from '../data/to-rated';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { DessertDetailComponent } from '../dessert-detail/dessert-detail.component';
 import { ToastService } from '../shared/toast';
@@ -22,19 +26,24 @@ import { ToastService } from '../shared/toast';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DessertsComponent {
-  #store = inject(DessertStore);
+  #dessertStore = inject(DessertStore);
+  #ratingStore = inject(RatingsStore);
   #dispatcher = inject(Dispatcher);
+
   #toast = inject(ToastService);
   #dialog = inject(MatDialog);
 
-  originalName = linkedSignal(() => this.#store.filter.originalName());
-  englishName = linkedSignal(() => this.#store.filter.englishName());
+  originalName = linkedSignal(() => this.#dessertStore.filter.originalName());
+  englishName = linkedSignal(() => this.#dessertStore.filter.englishName());
 
-  ratedDesserts = this.#store.ratedDesserts;
-  loading = this.#store.loading;
+  loading = computed(
+    () => this.#dessertStore.loading() || this.#ratingStore.loading(),
+  );
+  ratedDesserts = computed(() =>
+    toRated(this.#dessertStore.desserts(), this.#ratingStore.ratings()),
+  );
 
   constructor() {
-    
     this.loadDesserts();
 
     effect(() => {
@@ -55,18 +64,16 @@ export class DessertsComponent {
   }
 
   loadRatings(): void {
-    this.#dispatcher.dispatch(
-      dessertEvents.loadRatings(() => {}),
-    );
+    this.#dispatcher.dispatch(ratingEvents.loadRatings(() => {}));
   }
 
   updateRating(dessertId: number, rating: number): void {
     this.#dispatcher.dispatch(
-      dessertEvents.updateRating({
+      ratingEvents.updateRating({
         dessertId,
         rating,
-      })
-    )
+      }),
+    );
   }
 
   showDetail(id: number) {
