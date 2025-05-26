@@ -84,20 +84,26 @@ export const DessertStore = signalStore(
   ),
   withEffects((store) => ({
     loadDesserts$: store._events.on(dessertEvents.loadDesserts).pipe(
-      switchMap((e) => store._dessertService.find(e.payload)),
-      mapResponse({
-        next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
-        error: (error) =>
-          dessertEvents.loadDessertsError({ error: String(error) }),
-      }),
+      switchMap((e) =>
+        store._dessertService.find(e.payload).pipe(
+          mapResponse({
+            next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
+            error: (error) =>
+              dessertEvents.loadDessertsError({ error: String(error) }),
+          }),
+        ),
+      ),
     ),
     loadRatings$: store._events.on(dessertEvents.loadRatings).pipe(
-      switchMap(() => store._ratingService.loadExpertRatings()),
-      mapResponse({
-        next: (ratings) => dessertEvents.loadRatingsSuccess({ ratings }),
-        error: (error) =>
-          dessertEvents.loadRatingsError({ error: String(error) }),
-      }),
+      switchMap(() =>
+        store._ratingService.loadExpertRatings().pipe(
+          mapResponse({
+            next: (ratings) => dessertEvents.loadRatingsSuccess({ ratings }),
+            error: (error) =>
+              dessertEvents.loadRatingsError({ error: String(error) }),
+          }),
+        ),
+      ),
     ),
   })),
 );
