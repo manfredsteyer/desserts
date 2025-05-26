@@ -9,7 +9,7 @@ import {
   withProps,
   withState,
 } from '@ngrx/signals';
-import { on, withReducer, Events } from '@ngrx/signals/events';
+import { Events } from '@ngrx/signals/events';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 import { ToastService } from '../shared/toast';
@@ -37,17 +37,6 @@ export const DessertStore = signalStore(
     _toastService: inject(ToastService),
     _events: inject(Events),
   })),
-  withReducer(
-    on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
-      const updated = payload.dessert;
-      return (store) => ({
-        desserts: store.desserts.map((d) =>
-          d.id === updated.id ? updated : d,
-        ),
-      });
-      // return updateDessert(updated);
-    }),
-  ),
   withComputed((store) => ({
     ratedDesserts: computed(() => toRated(store.desserts(), store.ratings())),
   })),
