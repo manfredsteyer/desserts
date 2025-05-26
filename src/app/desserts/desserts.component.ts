@@ -1,20 +1,29 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  linkedSignal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Dispatcher } from '@ngrx/signals/events';
+import { dessertEvents } from '../data/dessert.events';
 import { DessertStore } from '../data/dessert.store';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
-import { ToastService } from '../shared/toast';
-import { MatDialog } from '@angular/material/dialog';
 import { DessertDetailComponent } from '../dessert-detail/dessert-detail.component';
+import { ToastService } from '../shared/toast';
 
 @Component({
-    selector: 'app-desserts',
-    imports: [DessertCardComponent, FormsModule],
-    templateUrl: './desserts.component.html',
-    styleUrl: './desserts.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-desserts',
+  imports: [DessertCardComponent, FormsModule],
+  templateUrl: './desserts.component.html',
+  styleUrl: './desserts.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DessertsComponent {
   #store = inject(DessertStore);
+  #dispatcher = inject(Dispatcher);
   #toast = inject(ToastService);
   #dialog = inject(MatDialog);
 
@@ -24,36 +33,48 @@ export class DessertsComponent {
   ratedDesserts = this.#store.ratedDesserts;
   loading = this.#store.loading;
 
-  #linkedFilter = computed(() => ({
-    originalName: this.originalName(),
-    englishName: this.englishName()
-  }));
-
   constructor() {
-    this.#store.loadDesserts(this.#linkedFilter);
+    
+    this.loadDesserts();
 
     effect(() => {
       const count = this.ratedDesserts().length;
       if (count > 0) {
-        this.#toast.show(count + ' desserts loaded')
+        this.#toast.show(count + ' desserts loaded');
       }
     });
   }
 
-  loadRatings(): void {
-    this.#store.loadRatings();
+  loadDesserts(): void {
+    this.#dispatcher.dispatch(
+      dessertEvents.loadDesserts({
+        originalName: this.originalName(),
+        englishName: this.englishName(),
+      }),
+    );
   }
 
-  updateRating(id: number, rating: number): void {
-    this.#store.updateRating(id, rating);
+  loadRatings(): void {
+    this.#dispatcher.dispatch(
+      dessertEvents.loadRatings(() => {}),
+    );
+  }
+
+  updateRating(dessertId: number, rating: number): void {
+    this.#dispatcher.dispatch(
+      dessertEvents.updateRating({
+        dessertId,
+        rating,
+      })
+    )
   }
 
   showDetail(id: number) {
     this.#dialog.open(DessertDetailComponent, {
       width: '500px',
       data: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }

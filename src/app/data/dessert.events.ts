@@ -1,14 +1,14 @@
 import { eventGroup } from '@ngrx/signals/events'; 
 import { type } from '@ngrx/signals';
-import { DessertFilter } from './dessert-filter';
 import { Dessert } from './dessert';
 import { DessertIdToRatingMap } from './rating.service';
 
-export const dessertStoreEvents = eventGroup({
+export const dessertEvents = eventGroup({
   source: 'Dessert Feature',
   events: {
     loadDesserts: type<{
-        filter: DessertFilter
+        originalName: string,
+        englishName: string,
     }>(),
     loadDessertsSuccess: type<{
         desserts: Dessert[]
@@ -19,6 +19,10 @@ export const dessertStoreEvents = eventGroup({
     loadRatings: type<void>,
     loadRatingsSuccess: type<{
         ratings: DessertIdToRatingMap
+    }>(),
+    updateRating: type<{
+        dessertId: number,
+        rating: number
     }>(),
     loadRatingsError: type<{
         error: string

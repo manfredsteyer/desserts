@@ -1,24 +1,15 @@
 import { computed, inject } from '@angular/core';
-import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withProps,
-  withState,
-} from '@ngrx/signals';
-import { on, withReducer } from '@ngrx/signals/events';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { filter, pipe, switchMap, tap } from 'rxjs';
+import { mapResponse } from '@ngrx/operators';
+import { signalStore, withComputed, withProps, withState } from '@ngrx/signals';
+import { Events, on, withEffects, withReducer } from '@ngrx/signals/events';
+import { switchMap } from 'rxjs';
 import { ToastService } from '../shared/toast';
 import { Dessert } from './dessert';
 import { dessertDetailStoreEvents } from './dessert-detail.events';
-import { DessertFilter } from './dessert-filter';
+import { dessertEvents } from './dessert.events';
 import { DessertService } from './dessert.service';
 import { DessertIdToRatingMap, RatingService } from './rating.service';
 import { toRated } from './to-rated';
-import { dessertStoreEvents } from './dessert.events';
 
 export const DessertStore = signalStore(
   { providedIn: 'root' },
@@ -30,77 +21,66 @@ export const DessertStore = signalStore(
     loading: false,
     ratings: {} as DessertIdToRatingMap,
     desserts: [] as Dessert[],
+    error: '',
   }),
   withProps(() => ({
     _dessertService: inject(DessertService),
     _ratingService: inject(RatingService),
     _toastService: inject(ToastService),
+    _events: inject(Events),
   })),
-  withReducer(
-    on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
-      return updateDessert(payload.dessert);
-    }),
-    on(dessertStoreEvents.loadDesserts, ({ payload }) => {
-      return (state) => {
-        return patchState(state, { filter: payload.filter });
-      }
-    }),
-  ),
   withComputed((store) => ({
     ratedDesserts: computed(() => toRated(store.desserts(), store.ratings())),
   })),
-  withMethods((store) => ({
-    loadRatings(): void {
-      patchState(store, { loading: true });
-
-      store._ratingService.loadExpertRatings().subscribe({
-        next: (ratings) => {
-          patchState(store, { ratings, loading: false });
-        },
-        error: (error) => {
-          patchState(store, { loading: false });
-          store._toastService.show('Error loading ratings!');
-          console.error(error);
-        },
+  withReducer(
+    on(dessertDetailStoreEvents.dessertUpdated, ({ payload }) => {
+      return (store) => ({
+        desserts: store.desserts.map((d) =>
+          d.id === payload.dessert.id ? payload.dessert : d,
+        ),
       });
-    },
-    updateRating(id: number, rating: number): void {
-      patchState(store, (state) => ({
+    }),
+    on(dessertEvents.loadDesserts, ({ payload }) => {
+      return { filter: payload };
+    }),
+    on(dessertEvents.loadDessertsSuccess, ({ payload }) => {
+      return { desserts: payload.desserts };
+    }),
+    on(dessertEvents.loadRatingsSuccess, ({ payload }) => {
+      return { ratings: payload.ratings };
+    }),
+    on(dessertEvents.updateRating, ({ payload }) => {
+      return (state) => ({
         ratings: {
           ...state.ratings,
-          [id]: rating,
+          [payload.dessertId]: payload.rating,
         },
-      }));
-    },
-    loadDesserts: rxMethod<DessertFilter>(
-      pipe(
-        tap(() => patchState(store, { loading: true })),
-        switchMap((f) =>
-          store._dessertService.find(f).pipe(
-            tapResponse({
-              next: (desserts) => {
-                patchState(store, { desserts, loading: false });
-              },
-              error: (error) => {
-                store._toastService.show('Error loading desserts!');
-                console.error(error);
-                patchState(store, { loading: false });
-              },
-            }),
-          ),
-        ),
-      ),
+      });
+    }),
+    on(
+      dessertEvents.loadDessertsError,
+      dessertEvents.loadRatingsError,
+      ({ payload }) => {
+        return { error: payload.error };
+      },
     ),
-  }))
+  ),
+  withEffects((store) => ({
+    loadDesserts$: store._events.on(dessertEvents.loadDesserts).pipe(
+      switchMap((e) => store._dessertService.find(e.payload)),
+      mapResponse({
+        next: (desserts) => dessertEvents.loadDessertsSuccess({ desserts }),
+        error: (error) =>
+          dessertEvents.loadDessertsError({ error: String(error) }),
+      }),
+    ),
+    loadRatings$: store._events.on(dessertEvents.loadRatings).pipe(
+      switchMap(() => store._ratingService.loadExpertRatings()),
+      mapResponse({
+        next: (ratings) => dessertEvents.loadRatingsSuccess({ ratings }),
+        error: (error) =>
+          dessertEvents.loadRatingsError({ error: String(error) }),
+      }),
+    ),
+  })),
 );
-
-export type DessertSlice = {
-  desserts: Dessert[];
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function updateDessert(updated: Dessert) {
-  return (store: DessertSlice) => ({
-    desserts: store.desserts.map((d) => (d.id === updated.id ? updated : d)),
-  });
-}
