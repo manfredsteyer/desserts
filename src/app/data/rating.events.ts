@@ -5,7 +5,7 @@ import { DessertIdToRatingMap } from './rating.service';
 export const ratingEvents = eventGroup({
   source: '',
   events: {
-    loadRatings: type<void>,
+    loadRatings: type<void>(),
     loadRatingsSuccess: type<{
       ratings: DessertIdToRatingMap;
     }>(),
