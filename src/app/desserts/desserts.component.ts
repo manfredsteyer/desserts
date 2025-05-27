@@ -64,7 +64,7 @@ export class DessertsComponent {
   }
 
   loadRatings(): void {
-    this.#dispatcher.dispatch(ratingEvents.loadRatings(() => {}));
+    this.#dispatcher.dispatch(ratingEvents.loadRatings());
   }
 
   updateRating(dessertId: number, rating: number): void {
