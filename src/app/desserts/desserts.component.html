@@ -26,13 +26,23 @@
 </form>
 
 <div class="card-grid">
-  @for (dessert of ratedDesserts(); track dessert.id) {
-    <app-dessert-card
-      [dessert]="dessert"
-      (ratingChange)="updateRating(dessert.id, $event)"
-    ></app-dessert-card>
+
+  @if(!error()) {
+    @for (dessert of ratedDesserts(); track dessert.id) {
+      <app-dessert-card
+        [dessert]="dessert"
+        (ratingChange)="updateRating(dessert.id, $event)"
+      ></app-dessert-card>
+    }
+
   }
-  @if (ratedDesserts().length === 0 && !loading()) {
+  @else {
+    <b>Error loading desserts!</b>
+  }
+
+  @if (!error() && ratedDesserts().length === 0 && !loading()) {
     <p class="text-lg">Sorry, no desserts found.</p>
   }
+
+
 </div>

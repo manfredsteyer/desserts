@@ -27,21 +27,23 @@ export class DessertStore {
   #ratingsRequested = signal<Requested>(undefined);
 
   #dessertsResource = resource({
-    request: this.#debouncedCriteria,
-    loader: (param) => {
-      return this.#dessertService.findPromise(param.request, param.abortSignal);
-    }
+    params: this.#debouncedCriteria,
+    loader: (loaderParams) => {
+      return this.#dessertService.findPromise(loaderParams.params, loaderParams.abortSignal);
+    },
+    defaultValue: []
   });
 
   #ratingsResource = resource({
-    request: this.#ratingsRequested,
+    params: this.#ratingsRequested,
     loader: () => {
       return this.#ratingService.loadExpertRatingsPromise();
-    }
+    },
+    defaultValue: {}
   });
 
-  readonly desserts = computed(() => this.#dessertsResource.value() ?? []);
-  readonly ratings = computed(() => this.#ratingsResource.value() ?? {});
+  readonly desserts = this.#dessertsResource.value;
+  readonly ratings = this.#ratingsResource.value;
   readonly ratedDesserts = computed(() => toRated(this.desserts(), this.ratings()));
 
   readonly loading = debounceTrue(() => this.#ratingsResource.isLoading() || this.#dessertsResource.isLoading(), 500);

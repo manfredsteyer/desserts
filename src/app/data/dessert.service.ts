@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, lastValueFrom, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
 import { toPromise } from '../shared/to-promise';

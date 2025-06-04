@@ -9,19 +9,21 @@ export class DessertDetailStore {
   #id = signal<number | undefined>(undefined);
 
   #dessertResource = resource({
-    request: computed(() => ({ id: this.#id() })),
-    loader: (param) => {
-      const id = param.request.id;
+    params: computed(() => ({ id: this.#id() })),
+    loader: async (loaderParams) => {
+      const id = loaderParams.params.id;
       if (id) {
-        return this.#dessertService.findPromiseById(id);
+        const result = await this.#dessertService.findPromiseById(id);
+        return result || initDessert;
       }
       else {
         return Promise.resolve(initDessert);
       }
     },
+    defaultValue: initDessert
   });
 
-  readonly dessert = computed(() => this.#dessertResource.value() ?? initDessert);
+  readonly dessert = this.#dessertResource.value;
   readonly loading = computed(() => this.#dessertResource.isLoading());
   readonly error = this.#dessertResource.error;
 
