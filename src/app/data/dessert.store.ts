@@ -34,17 +34,17 @@ export const DessertStore = signalStore(
   })),
   withProps((store) => ({
     _dessertsResource: resource({
-      request: store.filter,
-      loader: (params) => {
-        const filter = params.request;
-        const abortSignal = params.abortSignal;
+      params: store.filter,
+      loader: (loaderParams) => {
+        const filter = loaderParams.params;
+        const abortSignal = loaderParams.abortSignal;
         return store._dessertService.findPromise(filter, abortSignal);
       },
     }),
     _ratingsResource: resource({
-      request: store.ratingsRequested,
-      loader: (params) => {
-        const abortSignal = params.abortSignal;
+      params: store.ratingsRequested,
+      loader: (loaderParams) => {
+        const abortSignal = loaderParams.abortSignal;
         return store._ratingService.loadExpertRatingsPromise(abortSignal);
       },
     }),
