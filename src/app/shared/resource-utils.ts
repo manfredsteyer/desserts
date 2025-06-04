@@ -48,11 +48,11 @@ export function debounceTrue(computation: () => boolean, time = 300): Signal<boo
   const value = computed(() => computation());
   
   const debouncedResource = resource({
-    request: value,
-    loader: async (param) => {
-      const isLoading = param.request;
+    params: value,
+    loader: async (loaderParams) => {
+      const isLoading = loaderParams.params;
       if (isLoading) {
-        await wait(time, param.abortSignal);
+        await wait(time, loaderParams.abortSignal);
         return true;
       }
       return false;

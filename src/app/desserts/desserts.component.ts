@@ -31,16 +31,16 @@ export class DessertsComponent {
   }));
 
   dessertsResource = rxResource({
-    request: this.dessertsCriteria,
-    loader: (param) => {
-      return timer(300).pipe(switchMap(() => this.#dessertService.find(param.request)));
+    params: this.dessertsCriteria,
+    stream: (loaderParams) => {
+      return timer(300).pipe(switchMap(() => this.#dessertService.find(loaderParams.params)));
     }
   });
 
   desserts = computed(() => this.dessertsResource.value() ?? []);
 
   ratingsResource = rxResource({
-    loader: rxSkipInitial(() => {
+    stream: rxSkipInitial(() => {
       return this.#ratingService.loadExpertRatings()
     })
   });
