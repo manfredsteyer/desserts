@@ -1,6 +1,7 @@
 {
   "name": "dessert",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "prettier **/*.{ts,html,css} --write",
-    "json-server": "json-server src/assets/desserts-db.json"
+    "server": "node server.js"
   },
   "private": true,
   "dependencies": {
