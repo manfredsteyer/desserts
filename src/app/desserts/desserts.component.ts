@@ -40,11 +40,10 @@ export class DessertsComponent implements OnInit {
   error = this.#dessertStore.error;
 
   ngOnInit(): void {
-    this.search();
+    this.#dessertStore.rxLoad(this.criteria);
   }
 
   search(): void {
-    this.#dessertStore.load(this.criteria());
   }
 
   loadRatings(): void {
