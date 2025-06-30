@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Injectable, Signal, inject } from '@angular/core';
 import { Observable, lastValueFrom, map } from 'rxjs';
 import { Dessert } from './dessert';
 import { DessertFilter } from './dessert-filter';
@@ -40,5 +40,17 @@ export class DessertService {
 
   findPromiseById(id: number): Promise<Dessert[]> {
     return lastValueFrom(this.findById(id));
+  }
+
+  findResource(filter: Signal<DessertFilter>) {
+    return httpResource<Dessert[]>(() => ({
+      url: 'http://localhost:3000/desserts',
+      params: {
+        originalName: filter().originalName,
+        englishName: filter().englishName
+      }
+    }), {
+      defaultValue: []
+    });
   }
 }

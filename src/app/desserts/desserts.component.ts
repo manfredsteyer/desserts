@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
-import { DessertFilter } from '../data/dessert-filter';
 import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
@@ -15,7 +14,7 @@ import { ToastService } from '../shared/toast';
   styleUrl: './desserts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DessertsComponent implements OnInit {
+export class DessertsComponent {
   #dessertService = inject(DessertService);
   #ratingService = inject(RatingService);
   #toastService = inject(ToastService);
@@ -28,49 +27,32 @@ export class DessertsComponent implements OnInit {
     englishName: this.englishName(),
   }));
 
-  desserts = signal<Dessert[]>([]);
+  dessertResource = this.#dessertService.findResource(this.criteria);
+
+  desserts = this.dessertResource.value;
   ratings = signal<DessertIdToRatingMap>({});
   ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
+  
+  isLoadingRatings = signal(false);
 
-  loading = signal(false);
-
-  ngOnInit(): void {
-    this.search();
-  }
+  loading = this.dessertResource.isLoading;
+  error = this.dessertResource.error;
 
   search(): void {
-    const filter: DessertFilter = {
-      originalName: this.originalName(),
-      englishName: this.englishName(),
-    };
-
-    this.loading.set(true);
-
-    this.#dessertService.find(filter).subscribe({
-      next: (desserts) => {
-        this.desserts.set(desserts);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.loading.set(false);
-        this.#toastService.show('Error loading desserts!');
-        console.error(error);
-      },
-    });
   }
 
   loadRatings(): void {
-    this.loading.set(true);
+    this.isLoadingRatings.set(true);
 
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
         this.ratings.set(ratings);
-        this.loading.set(false);
+        this.isLoadingRatings.set(false);
       },
       error: (error) => {
         this.#toastService.show('Error loading ratings!');
         console.error(error);
-        this.loading.set(false);
+        this.isLoadingRatings.set(false);
       },
     });
   }
