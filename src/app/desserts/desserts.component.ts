@@ -23,15 +23,8 @@ export class DessertsComponent implements OnInit {
   originalName = signal('');
   englishName = signal('');
 
-  criteria = computed(() => ({
-    originalName: this.originalName(),
-    englishName: this.englishName(),
-  }));
-
   desserts = signal<Dessert[]>([]);
   ratings = signal<DessertIdToRatingMap>({});
-  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
-
   loading = signal(false);
 
   ngOnInit(): void {
@@ -64,7 +57,8 @@ export class DessertsComponent implements OnInit {
 
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
-        this.ratings.set(ratings);
+        const ratedDesserts = this.toRated(this.desserts(), ratings);
+        this.desserts.set(ratedDesserts);
         this.loading.set(false);
       },
       error: (error) => {
