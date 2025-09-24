@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
 import { DessertFilter } from '../data/dessert-filter';
@@ -6,6 +6,8 @@ import { DessertService } from '../data/dessert.service';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
 import { DessertCardComponent } from '../dessert-card/dessert-card.component';
 import { ToastService } from '../shared/toast';
+import { httpResource } from '@angular/common/http';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-desserts',
@@ -23,33 +25,42 @@ export class DessertsComponent implements OnInit {
   originalName = signal('');
   englishName = signal('');
 
-  desserts = signal<Dessert[]>([]);
+  dessertsResource = this.#dessertService.findResource(this.originalName, this.englishName)
+
+  desserts = this.dessertsResource.value;
+  errors = this.dessertsResource.error;
+  isLoading = this.dessertsResource.isLoading;
+
   ratings = signal<DessertIdToRatingMap>({});
+  ratedDesserts = computed(() => this.toRated(this.desserts(), this.ratings()));
+
   loading = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.logStuff();
+
+      // Never call biz logic in an effect
+      // this.service.deleteStuff()
+      //    userId(), loading()
+    });
+
+    effect(() => {
+      this.#toastService.show(this.desserts().length + ' loaded ...');
+    });
+  }
+
+  private logStuff() {
+    console.log('originalName', this.originalName());
+    console.log('englishName', this.englishName());
+  }
 
   ngOnInit(): void {
     this.search();
   }
 
   search(): void {
-    const filter: DessertFilter = {
-      originalName: this.originalName(),
-      englishName: this.englishName(),
-    };
-
-    this.loading.set(true);
-
-    this.#dessertService.find(filter).subscribe({
-      next: (desserts) => {
-        this.desserts.set(desserts);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.loading.set(false);
-        this.#toastService.show('Error loading desserts!');
-        console.error(error);
-      },
-    });
+    this.dessertsResource.reload();
   }
 
   loadRatings(): void {
@@ -57,8 +68,7 @@ export class DessertsComponent implements OnInit {
 
     this.#ratingService.loadExpertRatings().subscribe({
       next: (ratings) => {
-        const ratedDesserts = this.toRated(this.desserts(), ratings);
-        this.desserts.set(ratedDesserts);
+        this.ratings.set(ratings);
         this.loading.set(false);
       },
       error: (error) => {
