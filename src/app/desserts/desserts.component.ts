@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dessert } from '../data/dessert';
 import { DessertIdToRatingMap, RatingService } from '../data/rating.service';
@@ -38,6 +38,20 @@ export class DessertsComponent implements OnInit {
 
   loading = this.#dessertStore.loading;
   error = this.#dessertStore.error;
+
+
+  constructor() {
+    effect(() => {
+      // this.logStuff();
+      //  this.mySvc.logic()
+      //    userId()
+      //    loading()
+    })
+  }
+
+  private logStuff() {
+    console.log('criteria', this.criteria());
+  }
 
   ngOnInit(): void {
     this.#dessertStore.rxLoad(this.criteria);
